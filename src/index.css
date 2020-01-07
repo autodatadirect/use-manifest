@@ -1,0 +1,18 @@
+.pager-button.current-page {
+  font-weight: bolder;
+}
+
+.manifest-controls > div {
+  display: inline-block;
+}
+
+.manifest-controls > .manifest-page-size {
+
+}
+.manifest-controls > .manifest-status {
+
+}
+
+.manifest-controls > .manifest-pager {
+
+}
