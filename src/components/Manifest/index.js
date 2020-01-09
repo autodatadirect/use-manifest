@@ -29,7 +29,7 @@ const Manifest = ({ children, fetch, filter, definition }) => {
 
   useEffect(() => {
     load(filter)
-  }, [load, dispatch, filter])
+  }, [load, filter])
 
   return (
     <manifestContext.Provider value={value}>

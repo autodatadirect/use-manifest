@@ -7,7 +7,6 @@ export default () => {
 
   return (
     <select
-      className='row-limit form-control form'
       value={pageSize}
       onChange={handlePageSizeChange}
     >

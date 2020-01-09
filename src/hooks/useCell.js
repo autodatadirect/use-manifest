@@ -1,19 +1,17 @@
-import { useContext, useCallback } from 'react'
-import { manifestContext } from '../components/Manifest'
-import * as actions from '../actions'
+import useManifest from './useManifest'
 
 export default ({ columnIndex, rowIndex }) => {
-  const { state, dispatch } = useContext(manifestContext)
-  const def = state.definition[columnIndex]
-  const row = state.rows[rowIndex]
+  const { definition, rows, sorts, setSorts, loading } = useManifest()
+  const def = definition[columnIndex]
+  const row = rows[rowIndex]
   const value = row[def.id]
-  const setSorts = useCallback((id, isAsc) => dispatch(actions.setSorts(id, isAsc)), [dispatch])
 
   return {
-    sorts: state.sorts,
+    sorts,
     def,
     row,
     value,
-    setSorts
+    setSorts,
+    loading
   }
 }

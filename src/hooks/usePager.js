@@ -1,18 +1,12 @@
-import { useContext, useCallback } from 'react'
-import { manifestContext } from '../components/Manifest'
+import useManifest from './useManifest'
 import * as pagerLogic from '../utils/pagerLogic'
-import * as actions from '../actions'
 
 export default () => {
-  const { state, dispatch } = useContext(manifestContext)
-  const { page, pageSize, count } = state
+  const { loading, page, pageSize, count, setPage, setPageSize } = useManifest()
   const totalPages = pagerLogic.determineTotalPages(pageSize, count)
-  const setPage = useCallback(page => dispatch(actions.setPage(page)), [dispatch])
-  const setPageSize = useCallback(pageSize => dispatch(actions.setPageSize(pageSize)), [dispatch])
 
   return {
-    loadingData: state.loadingData,
-    loadingCount: state.loadingCount,
+    loading,
     count,
     page,
     pageSize,

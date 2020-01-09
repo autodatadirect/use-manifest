@@ -3,9 +3,15 @@ import Manifest from './components/Manifest'
 import Table from './components/Table'
 import Debug from './components/Debug'
 import CellEpochDate from './components/CellEpochDate'
+import useCell from './hooks/useCell'
+import useHeaderCell from './hooks/useHeaderCell'
+import usePager from './hooks/usePager'
 
 export {
   useManifest,
+  useCell,
+  useHeaderCell,
+  usePager,
   Manifest,
   Table,
   Debug,

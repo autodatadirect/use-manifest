@@ -9,6 +9,7 @@ export default () => {
   const setPageSize = useCallback(pageSize => dispatch(actions.setPageSize(pageSize)), [dispatch])
 
   return {
+    loading: state.loadingData && state.loadingCount,
     loadingData: state.loadingData,
     loadingCount: state.loadingCount,
     page: state.page,

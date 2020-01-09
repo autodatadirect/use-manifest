@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
-import useColumn from '../../hooks/useColumn'
+import useColumn from '../../hooks/useHeaderCell'
 
 const SimpleHeader = ({ columnIndex }) => {
   const { setSorts, sorts, id, label } = useColumn(columnIndex)
