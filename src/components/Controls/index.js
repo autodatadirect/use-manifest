@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Pager from '../Pager'
+import Pager from '../ButtonPager'
 import PageSizer from '../PageSizer'
 import Status from '../Status'
 

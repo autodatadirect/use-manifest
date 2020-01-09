@@ -1,30 +1,30 @@
-import React, { createContext, useReducer, useEffect, useCallback } from 'react'
+import React, { createContext, useCallback, useEffect, useReducer } from 'react'
 import PropTypes from 'prop-types'
 import reducer, { initialState } from '../../utils/reducer'
 import * as actions from '../../actions'
-import Table from '../Table'
+import DefaultManifestTable from '../DefaultManifestTable'
 
 export const manifestContext = createContext()
 
 const Manifest = ({ children, fetch, filter, definition }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
-  const { meta } = state
+  const { page, pageSize, sorts } = state
   const value = { state, dispatch }
   value.state.definition = definition
 
   const load = useCallback(async filter => {
-    const { rows, count } = await fetch(filter, meta)
+    const { rows, count } = await fetch(filter, { page, pageSize, sorts })
     dispatch(actions.setRows(rows))
     dispatch(actions.setCount(count))
-  }, [fetch, meta])
+  }, [fetch, page, pageSize, sorts])
 
   useEffect(() => {
     load(filter)
-  }, [load, filter])
+  }, [load, dispatch, filter])
 
   return (
     <manifestContext.Provider value={value}>
-      {children || <Table />}
+      {children || <DefaultManifestTable />}
     </manifestContext.Provider>
   )
 }

@@ -1,11 +1,11 @@
 import React from 'react'
-import useManifestData from '../../hooks/useManifestData'
+import useManifest from '../../hooks/useManifest'
 
 export default () => {
-  const data = useManifestData()
+  const data = useManifest()
   return (
     <div style={{ textAlign: 'left' }}>
-      <h3>useManifestData</h3>
+      <h3>useManifest</h3>
       <pre>{JSON.stringify(data, null, ' ')}</pre>
     </div>
   )

@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
-import useManifestData from '../../hooks/useManifestData'
+import usePager from '../../hooks/usePager'
 
 const PagerButton = ({ page, loading, isCurrentPage, children, className }) => {
-  const { setPage } = useManifestData()
+  const { setPage } = usePager()
   const handleClick = useCallback(() => setPage(page), [page])
 
   let buttonStyle = 'pager-button'

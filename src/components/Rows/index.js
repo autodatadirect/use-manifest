@@ -1,17 +1,21 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
-import useManifestData from '../../hooks/useManifestData'
+import createSequentialIntegerArray from '../../utils/createSequentialIntegerArray'
 import Row from '../Row'
 
-const mapRow = row =>
-  <Row key={row.id} {...row} />
-
-export default () => {
-  const { rows } = useManifestData()
+const Rows = ({ rowCount, columnCount }) => {
+  const rowIndexArray = useMemo(() => createSequentialIntegerArray(rowCount), [rowCount])
 
   return (
     <tbody>
-      {rows.map(mapRow)}
+      {rowIndexArray.map(i => <Row key={i} rowIndex={i} columnCount={columnCount} />)}
     </tbody>
   )
 }
+
+Rows.propTypes = {
+  rowCount: PropTypes.number.isRequired,
+  columnCount: PropTypes.number.isRequired
+}
+
+export default Rows

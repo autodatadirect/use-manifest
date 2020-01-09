@@ -10,8 +10,8 @@ export const setPageSize = pageSize => ({
   pageSize
 })
 
-export const setSort = (id, isAsc) => ({
-  type: types.SET_SORT,
+export const setSorts = (id, isAsc) => ({
+  type: types.SET_SORTS,
   id,
   isAsc
 })

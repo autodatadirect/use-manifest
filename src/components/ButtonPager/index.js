@@ -1,9 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import * as pagerLogic from '../../utils/pagerLogic'
-
 import PagerButton from '../PagerButton'
-import useManifestData from '../../hooks/useManifestData'
+import usePager from '../../hooks/usePager'
 
 const isFirstPage = currentPage => currentPage <= 1
 const isLastPage = (currentPage, totalPages) => currentPage === totalPages
@@ -34,10 +33,7 @@ const NumberedPageButton = ({ page, currentPage }) =>
   </PagerButton>
 
 const Pager = ({ className }) => {
-  const { meta, count } = useManifestData()
-  const { page, pageSize } = meta
-
-  const totalPages = pagerLogic.determineTotalPages(pageSize, count)
+  const { page, pageSize, count, totalPages } = usePager()
   const numberedPageButtons = pagerLogic.determinePages(page, pageSize, count)
 
   if (count < 1) return null

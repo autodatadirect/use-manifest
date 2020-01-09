@@ -1,23 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Headers from '../Headers'
-import Controls from '../Controls'
 import Rows from '../Rows'
-import Debug from '../Debug'
 
-const Manifest = ({ className }) =>
-  <div className={`manifest-table ${className || ''}`}>
-    <table>
-      <Headers />
-      <Rows />
-      <tfoot />
-    </table>
-    <Controls />
-    <Debug />
-  </div>
+const Table = ({ className, columnCount, rowCount }) =>
+  <table className={`manifest-table ${className || ''}`}>
+    <Headers columnCount={columnCount} />
+    <Rows columnCount={columnCount} rowCount={rowCount} />
+    <tfoot />
+  </table>
 
-Manifest.propTypes = {
+Table.propTypes = {
+  columnCount: PropTypes.number.isRequired,
   className: PropTypes.string
 }
 
-export default Manifest
+export default Table

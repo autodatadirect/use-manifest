@@ -1,50 +1,34 @@
-import React, { useCallback } from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import SimpleHeader from '../SimpleHeader'
-import useManifestData from '../../hooks/useManifestData'
+import useColumn from '../../hooks/useColumn'
+import createSequentialIntegerArray from '../../utils/createSequentialIntegerArray'
 
-const HeaderCell = ({ id, label, sortable, headerComponent }) => {
-  const { setSort, meta } = useManifestData()
-  const { sort } = meta
+const HeaderCell = ({ columnIndex }) => {
+  const { headerComponent: HeaderComponent } = useColumn(columnIndex)
 
-  const handleSort = useCallback(() => {
-    const isAsc = sort.length && sort[0].id === id ? !sort[0].isAsc : true
-
-    setSort(id, isAsc)
-  }, [setSort, id, sort])
-
-  const headerProps = {
-    id,
-    label: label || id,
-    sortable: sortable || false,
-    handleSort: sortable ? handleSort : null
-  }
-
-  const HeaderComponent = headerComponent
-  if (HeaderComponent) return <HeaderComponent {...headerProps} />
-  return <SimpleHeader key={headerProps.id} {...headerProps} />
+  if (HeaderComponent) return <HeaderComponent columnIndex={columnIndex} />
+  return <SimpleHeader columnIndex={columnIndex} />
 }
 
 HeaderCell.propTypes = {
-  id: PropTypes.string.isRequired,
-  label: PropTypes.string,
-  sortable: PropTypes.bool,
-  headerComponent: PropTypes.func
+  columnIndex: PropTypes.number.isRequired
 }
 
-const Headers = ({ className }) => {
-  const { definition } = useManifestData()
+const Headers = ({ className, columnCount }) => {
+  const columnIndexArray = useMemo(() => createSequentialIntegerArray(columnCount), [columnCount])
 
   return (
     <thead className={className || ''}>
       <tr>
-        {definition.map(def => <HeaderCell key={def.id} {...def} />)}
+        {columnIndexArray.map(i => <th key={i}><HeaderCell columnIndex={i} /></th>)}
       </tr>
     </thead>
   )
 }
 
 Headers.propTypes = {
+  columnCount: PropTypes.number.isRequired,
   className: PropTypes.string
 }
 

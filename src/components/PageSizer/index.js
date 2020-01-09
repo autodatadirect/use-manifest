@@ -1,10 +1,8 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import useManifestData from '../../hooks/useManifestData'
+import usePager from '../../hooks/usePager'
 
-const PagerSizer = ({ filter, changePageSize, loading }) => {
-  const { meta, setPageSize } = useManifestData()
-  const { pageSize } = meta
+export default () => {
+  const { pageSize, setPageSize } = usePager()
   const handlePageSizeChange = ev => setPageSize(+ev.target.value)
 
   return (
@@ -21,8 +19,3 @@ const PagerSizer = ({ filter, changePageSize, loading }) => {
     </select>
   )
 }
-
-PagerSizer.propTypes = {
-}
-
-export default PagerSizer

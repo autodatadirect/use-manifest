@@ -1,6 +1,6 @@
 export const SET_ROWS = 'MANIFEST.SET_ROWS'
 export const SET_COUNT = 'MANIFEST.SET_COUNT'
-export const SET_SORT = 'MANIFEST.SET_SORT'
+export const SET_SORTS = 'MANIFEST.SET_SORTS'
 
 export const SET_PAGE = 'MANIFEST.SET_PAGE'
 export const SET_PAGE_SIZE = 'MANIFEST.SET_PAGE_SIZE'
