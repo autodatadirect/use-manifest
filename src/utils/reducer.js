@@ -1,6 +1,8 @@
 import * as actionTypes from '../constants/actionTypes'
 
 export const initialState = {
+  loadingDate: false,
+  loadingCount: false,
   page: 1,
   pageSize: 10,
   sorts: [],
@@ -12,6 +14,16 @@ export const initialSort = {
   id: '',
   isAsc: true
 }
+
+const setLoadingCount = (state, action) => ({
+  ...state,
+  loadingCount: action.loadingCount
+})
+
+const setLoadingData = (state, action) => ({
+  ...state,
+  loadingData: action.loadingData
+})
 
 const setPage = (state, action) => ({
   ...state,
@@ -52,6 +64,8 @@ export default (state, action) => {
     case actionTypes.SET_SORTS: return setSorts(state, action)
     case actionTypes.SET_ROWS: return setRows(state, action)
     case actionTypes.SET_COUNT: return setCount(state, action)
+    case actionTypes.SET_LOADING_COUNT: return setLoadingCount(state, action)
+    case actionTypes.SET_LOADING_DATA: return setLoadingData(state, action)
     default: return state
   }
 }

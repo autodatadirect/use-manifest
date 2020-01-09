@@ -9,6 +9,8 @@ export default (index) => {
 
   return {
     ...def,
+    loadingData: state.loadingData,
+    loadingCount: state.loadingCount,
     sorts: state.sorts,
     setSorts
   }

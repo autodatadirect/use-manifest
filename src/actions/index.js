@@ -25,3 +25,13 @@ export const setCount = count => ({
   type: types.SET_COUNT,
   count
 })
+
+export const setLoadingCount = loadingCount => ({
+  type: types.SET_LOADING_COUNT,
+  loadingCount
+})
+
+export const setLoadingData = loadingData => ({
+  type: types.SET_LOADING_DATA,
+  loadingData
+})
