@@ -1,8 +1,8 @@
 import React from 'react'
-import usePager from '../../hooks/usePager'
+import useManifest from '../../hooks/useManifest'
 
 export default () => {
-  const { pageSize, setPageSize } = usePager({})
+  const { pageSize, setPageSize } = useManifest()
   const handlePageSizeChange = ev => setPageSize(+ev.target.value)
 
   return (

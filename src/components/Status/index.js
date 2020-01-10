@@ -1,5 +1,5 @@
 import React from 'react'
-import usePager from '../../hooks/usePager'
+import useManifest from '../../hooks/useManifest'
 
 const determineFirstOnPage = (page, pageSize) => Math.max(page * pageSize, 0)
 
@@ -12,7 +12,7 @@ const renderTotalRecordsMessage = (count, page, pageSize) => {
 }
 
 const Status = () => {
-  const { page, pageSize, count } = usePager({})
+  const { page, pageSize, count } = useManifest()
 
   return (
     <div className='manifest-status'>

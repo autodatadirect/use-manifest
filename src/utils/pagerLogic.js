@@ -1,7 +1,7 @@
 
 export const determineTotalPages = (pageSize, count) => Math.floor(count / pageSize) + (count % pageSize ? 1 : 0)
 
-export const determinePages = (numberOfPages, currentPage, pageSize, count) => {
+export const determinePages = ({ numberOfPages, currentPage, pageSize, count }) => {
   const pages = []
   const totalPages = determineTotalPages(pageSize, count)
   let firstPage = currentPage - Math.floor((numberOfPages - 1) / 2)
