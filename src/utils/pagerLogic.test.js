@@ -46,5 +46,4 @@ describe('pagerLogic', () => {
       expect(pagerLogic.determinePages(d(4, 9, 10, 100))).toEqual([6, 7, 8, 9])
     })
   })
-
 })
