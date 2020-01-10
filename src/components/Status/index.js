@@ -1,25 +1,22 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import useManifestData from '../../hooks/useManifestData'
+import useManifest from '../../hooks/useManifest'
 
-const determineFirstOnPage = (page, pageSize) => Math.max((page - 1) * pageSize, 0)
+const determineFirstOnPage = (page, pageSize) => Math.max(page * pageSize, 0)
 
 const determineLastOnPage = (page, pageSize, count) => Math.min(determineFirstOnPage(page + 1, pageSize), count)
 
-const renderTotalRecordsMessage = (count, page, pageSize, error) => {
-  if (error) return error
+const renderTotalRecordsMessage = (count, page, pageSize) => {
   const last = determineLastOnPage(page, pageSize, count)
   const first = determineFirstOnPage(page, pageSize) + 1
   return count < 1 ? 'No Results' : `Showing ${first} to ${last} of ${count}`
 }
 
-const Status = ({ loadingCount, error }) => {
-  const { meta, count } = useManifestData()
-  const { page, pageSize } = meta
+const Status = () => {
+  const { page, pageSize, count } = useManifest()
 
   return (
-    <div className={'manifest-status' + (error ? ' manifest-error' : '')}>
-      {renderTotalRecordsMessage(count, page, pageSize, error)}
+    <div className='manifest-status'>
+      {renderTotalRecordsMessage(count, page, pageSize)}
     </div>
   )
 }

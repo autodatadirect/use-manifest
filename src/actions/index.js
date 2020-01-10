@@ -10,8 +10,8 @@ export const setPageSize = pageSize => ({
   pageSize
 })
 
-export const setSort = (id, isAsc) => ({
-  type: types.SET_SORT,
+export const setSorts = (id, isAsc) => ({
+  type: types.SET_SORTS,
   id,
   isAsc
 })
@@ -24,4 +24,14 @@ export const setRows = rows => ({
 export const setCount = count => ({
   type: types.SET_COUNT,
   count
+})
+
+export const setLoadingCount = loadingCount => ({
+  type: types.SET_LOADING_COUNT,
+  loadingCount
+})
+
+export const setLoadingData = loadingData => ({
+  type: types.SET_LOADING_DATA,
+  loadingData
 })

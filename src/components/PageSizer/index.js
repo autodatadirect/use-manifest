@@ -1,15 +1,12 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import useManifestData from '../../hooks/useManifestData'
+import useManifest from '../../hooks/useManifest'
 
-const PagerSizer = ({ filter, changePageSize, loading }) => {
-  const { meta, setPageSize } = useManifestData()
-  const { pageSize } = meta
+export default () => {
+  const { pageSize, setPageSize } = useManifest()
   const handlePageSizeChange = ev => setPageSize(+ev.target.value)
 
   return (
     <select
-      className='row-limit form-control form'
       value={pageSize}
       onChange={handlePageSizeChange}
     >
@@ -21,8 +18,3 @@ const PagerSizer = ({ filter, changePageSize, loading }) => {
     </select>
   )
 }
-
-PagerSizer.propTypes = {
-}
-
-export default PagerSizer

@@ -1,23 +1,59 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
-import Headers from '../Headers'
-import Controls from '../Controls'
-import Rows from '../Rows'
-import Debug from '../Debug'
+import HeaderCell from '../HeaderCell'
+import Cell from '../Cell'
+import integerSequence from '../../utils/integerSequence'
 
-const Manifest = ({ className }) =>
-  <div className={`manifest-table ${className || ''}`}>
-    <table>
-      <Headers />
-      <Rows />
-      <tfoot />
+const Table = ({ className, columnCount, rowCount }) => {
+  const columnIndexs = useMemo(() => integerSequence(columnCount), [columnCount])
+
+  return (
+    <table className={`manifest-table ${className || ''}`}>
+      <Headers columnIndexs={columnIndexs} />
+      <Rows rowCount={rowCount} columnIndexs={columnIndexs} />
     </table>
-    <Controls />
-    <Debug />
-  </div>
+  )
+}
 
-Manifest.propTypes = {
+Table.propTypes = {
+  columnCount: PropTypes.number.isRequired,
   className: PropTypes.string
 }
 
-export default Manifest
+const Headers = ({ columnIndexs }) =>
+  <thead>
+    <tr>
+      {columnIndexs.map(i => <th key={i}><HeaderCell columnIndex={i} /></th>)}
+    </tr>
+  </thead>
+
+Headers.propTypes = {
+  columnIndexs: PropTypes.array.isRequired
+}
+
+const Rows = ({ rowCount, columnIndexs }) => {
+  const rowIndexs = useMemo(() => integerSequence(rowCount), [rowCount])
+
+  return (
+    <tbody>
+      {rowIndexs.map(i => <Row key={i} rowIndex={i} columnIndexs={columnIndexs} />)}
+    </tbody>
+  )
+}
+
+Rows.propTypes = {
+  rowCount: PropTypes.number.isRequired,
+  columnIndexs: PropTypes.array.isRequired
+}
+
+const Row = ({ rowIndex, columnIndexs }) =>
+  <tr>
+    {columnIndexs.map(columnIndex => <td key={columnIndex + '.' + rowIndex}><Cell columnIndex={columnIndex} rowIndex={rowIndex} /></td>)}
+  </tr>
+
+Row.propTypes = {
+  rowIndex: PropTypes.number.isRequired,
+  columnIndexs: PropTypes.array.isRequired
+}
+
+export default Table

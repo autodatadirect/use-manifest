@@ -4,17 +4,22 @@ import * as actions from '../actions'
 
 export default () => {
   const { state, dispatch } = useContext(manifestContext)
-  const setSort = useCallback((id, isAsc) => dispatch(actions.setSort(id, isAsc)), [dispatch])
+  const setSorts = useCallback((id, isAsc) => dispatch(actions.setSorts(id, isAsc)), [dispatch])
   const setPage = useCallback(page => dispatch(actions.setPage(page)), [dispatch])
   const setPageSize = useCallback(pageSize => dispatch(actions.setPageSize(pageSize)), [dispatch])
 
   return {
-    setSort,
-    setPage,
-    setPageSize,
-    meta: state.meta,
+    loading: state.loadingData && state.loadingCount,
+    loadingData: state.loadingData,
+    loadingCount: state.loadingCount,
+    page: state.page,
+    pageSize: state.pageSize,
+    sorts: state.sorts,
     count: state.count,
     definition: state.definition,
-    rows: state.rows
+    rows: state.rows,
+    setSorts,
+    setPage,
+    setPageSize
   }
 }

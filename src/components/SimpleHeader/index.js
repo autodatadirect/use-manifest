@@ -1,31 +1,25 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
+import useColumn from '../../hooks/useHeaderCell'
 
-const sortStyle = (id, sortAsc) => {
-  if (sortAsc === null || sortAsc === undefined) return ''
-  return sortAsc ? ' sorted-asc' : ' sorted-desc'
+const SimpleHeader = ({ columnIndex }) => {
+  const { setSorts, sorts, id, label } = useColumn(columnIndex)
+
+  const handleSort = useCallback(() => {
+    const isAsc = sorts.length && sorts[0].id === id ? !sorts[0].isAsc : true
+
+    setSorts(id, isAsc)
+  }, [setSorts, id, sorts])
+
+  return (
+    <div onClick={handleSort}>
+      {label}
+    </div>
+  )
 }
-
-const style = (id, sortAsc, loading, sortable) => {
-  let className = 'manifest-header'
-  className += sortStyle(id, sortAsc)
-  className += loading ? ' loading' : ''
-  className += sortable ? ' sortable' : ''
-  return className
-}
-
-const SimpleHeader = ({ id, label, sortAsc, handleSort, loading, sortable }) =>
-  <th data-id={id} onClick={handleSort} className={style(id, sortAsc, loading, sortable)}>
-    {label}
-  </th>
 
 SimpleHeader.propTypes = {
-  id: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  sortAsc: PropTypes.bool,
-  handleSort: PropTypes.func,
-  loading: PropTypes.bool.isRequired,
-  sortable: PropTypes.bool.isRequired
+  columnIndex: PropTypes.number.isRequired
 }
 
 export default SimpleHeader
