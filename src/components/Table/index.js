@@ -2,10 +2,10 @@ import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import HeaderCell from '../HeaderCell'
 import Cell from '../Cell'
-import createSequentialIntegerArray from '../../utils/createSequentialIntegerArray'
+import integerSequence from '../../utils/integerSequence'
 
 const Table = ({ className, columnCount, rowCount }) => {
-  const columnIndexs = useMemo(() => createSequentialIntegerArray(columnCount), [columnCount])
+  const columnIndexs = useMemo(() => integerSequence(columnCount), [columnCount])
 
   return (
     <table className={`manifest-table ${className || ''}`}>
@@ -32,7 +32,7 @@ Headers.propTypes = {
 }
 
 const Rows = ({ rowCount, columnIndexs }) => {
-  const rowIndexs = useMemo(() => createSequentialIntegerArray(rowCount), [rowCount])
+  const rowIndexs = useMemo(() => integerSequence(rowCount), [rowCount])
 
   return (
     <tbody>

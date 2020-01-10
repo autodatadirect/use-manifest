@@ -3,7 +3,7 @@ import * as actionTypes from '../constants/actionTypes'
 export const initialState = {
   loadingDate: false,
   loadingCount: false,
-  page: 1,
+  page: 0,
   pageSize: 10,
   sorts: [],
   count: 0,
@@ -33,7 +33,7 @@ const setPage = (state, action) => ({
 const setPageSize = (state, action) => ({
   ...state,
   pageSize: action.pageSize,
-  page: 1
+  page: 0
 })
 
 const setSorts = (state, action) => ({

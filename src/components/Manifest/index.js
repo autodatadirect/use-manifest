@@ -18,7 +18,7 @@ const Manifest = ({ children, fetch, filter, definition }) => {
     dispatch(actions.setLoadingData(true))
     const { rows, count } = await fetch(filter, { page, pageSize, sorts })
     if (filter !== lastFilter) {
-      dispatch(actions.setPage(1))
+      dispatch(actions.setPage(0))
     }
     dispatch(actions.setRows(rows))
     dispatch(actions.setCount(count))

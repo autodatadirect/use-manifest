@@ -1,23 +1,19 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
-import * as pagerLogic from '../../utils/pagerLogic'
 import usePager from '../../hooks/usePager'
 
-const isFirstPage = currentPage => currentPage <= 1
-const isLastPage = (currentPage, totalPages) => currentPage === totalPages
-
 const Pager = ({ className }) => {
-  const { page, pageSize, count, totalPages, loading } = usePager()
-  const numberedPageButtons = pagerLogic.determinePages(page, pageSize, count)
+  const { page, pages, count, totalPages, loading } = usePager({ numberOfPages: 5 })
+  const lastPage = totalPages - 1
 
   if (count < 1) return null
   return (
     <div className={`manifest-pager ${className || ''}`} aria-label='pager'>
-      {!isFirstPage(page) ? <PagerButton page={1} loading={loading}>First</PagerButton> : null}
-      {!isFirstPage(page) ? <PagerButton page={page - 1} loading={loading}>{'<'}</PagerButton> : null}
-      {numberedPageButtons.map(i => <PagerButton key={i} page={i} isCurrentPage={page === i} loading={loading}>{i}</PagerButton>)}
-      {!isLastPage(page, totalPages) ? <PagerButton page={page + 1} loading={loading}>{'>'}</PagerButton> : null}
-      {!isLastPage(page, totalPages) ? <PagerButton page={totalPages} loading={loading}>Last</PagerButton> : null}
+      {page > 0 ? <PagerButton page={0} loading={loading}>First</PagerButton> : null}
+      {page > 0 ? <PagerButton page={page - 1} loading={loading}>{'<'}</PagerButton> : null}
+      {pages.map(i => <PagerButton key={i} page={i} isCurrentPage={page === i} loading={loading}>{i + 1}</PagerButton>)}
+      {page < lastPage ? <PagerButton page={page + 1} loading={loading}>{'>'}</PagerButton> : null}
+      {page < lastPage ? <PagerButton page={lastPage} loading={loading}>Last</PagerButton> : null}
     </div>
   )
 }
@@ -27,7 +23,7 @@ Pager.propTypes = {
 }
 
 const PagerButton = ({ page, loading, isCurrentPage, children }) => {
-  const { setPage } = usePager()
+  const { setPage } = usePager({})
   const handleClick = useCallback(() => setPage(page), [page])
 
   let buttonStyle = 'pager-button'

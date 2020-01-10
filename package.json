@@ -8,6 +8,7 @@
     "build": "babel ./src -d ./dist; cp ./src/index.css ./dist/index.css",
     "prepublish": "npm run build",
     "lint": "standard \"./src/**/*.js\" | snazzy",
+    "test": "jest ./src/* --watch",
     "dev": "babel ./src -w -d ./dist"
   },
   "keywords": [
@@ -20,10 +21,11 @@
   "devDependencies": {
     "@babel/cli": "^7.7.5",
     "@babel/core": "^7.7.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.7.7",
     "@babel/preset-env": "^7.7.6",
     "@babel/preset-react": "^7.7.4",
     "@babel/runtime": "^7.7.6",
-    "@babel/plugin-proposal-object-rest-spread": "^7.7.7",
+    "jest": "^24.9.0",
     "snazzy": "^8.0.0",
     "standard": "^14.3.1"
   },
