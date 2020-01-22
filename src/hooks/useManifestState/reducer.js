@@ -1,13 +1,14 @@
-import * as actionTypes from '../constants/actionTypes'
+import * as actionTypes from './actionTypes'
 
 export const initialState = {
-  loadingDate: false,
+  loadingData: false,
   loadingCount: false,
   page: 0,
   pageSize: 10,
   sorts: [],
   count: 0,
-  rows: []
+  rows: [],
+  filter: {}
 }
 
 export const initialSort = {
@@ -58,6 +59,12 @@ const setCount = (state, action) => ({
   count: action.count
 })
 
+const setFilter = (state, action) => ({
+  ...state,
+  filter: action.filter || {},
+  page: 0
+})
+
 export default (state, action) => {
   switch (action.type) {
     case actionTypes.SET_PAGE: return setPage(state, action)
@@ -67,6 +74,7 @@ export default (state, action) => {
     case actionTypes.SET_COUNT: return setCount(state, action)
     case actionTypes.SET_LOADING_COUNT: return setLoadingCount(state, action)
     case actionTypes.SET_LOADING_DATA: return setLoadingData(state, action)
+    case actionTypes.SET_FILTER: return setFilter(state, action)
     default: return state
   }
 }

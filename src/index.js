@@ -6,6 +6,7 @@ import CellEpochDate from './components/CellEpochDate'
 import useCell from './hooks/useCell'
 import useHeaderCell from './hooks/useHeaderCell'
 import usePager from './hooks/usePager'
+import DefaultManifestTable from './components/DefaultManifestTable'
 
 export {
   useManifest,
@@ -15,5 +16,6 @@ export {
   Manifest,
   Table,
   Debug,
-  CellEpochDate
+  CellEpochDate,
+  DefaultManifestTable
 }

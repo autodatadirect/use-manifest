@@ -3,44 +3,75 @@ import PropTypes from 'prop-types'
 import reducer, { initialState } from '../../utils/reducer'
 import * as actions from '../../actions'
 import DefaultManifestTable from '../DefaultManifestTable'
+import useManifestState from '../../hooks/useManifestState'
 
 export const manifestContext = createContext()
 
-const Manifest = ({ children, fetch, filter, definition }) => {
-  const [state, dispatch] = useReducer(reducer, initialState)
-  const [lastFilter, setLastFilter] = useState()
-  const { page, pageSize, sorts } = state
-  const value = { state, dispatch }
-  value.state.definition = definition
+const useManifestLoadCount = ({ fetchCount }) => {
+  const { setLoadingCount, setCount, page, pageSize, sorts } = useManifestState()
 
-  const load = useCallback(async filter => {
-    dispatch(actions.setLoadingCount(true))
-    dispatch(actions.setLoadingData(true))
-    const { rows, count } = await fetch(filter, { page, pageSize, sorts })
-    if (filter !== lastFilter) {
-      dispatch(actions.setPage(0))
-    }
-    dispatch(actions.setRows(rows))
-    dispatch(actions.setCount(count))
-    setLastFilter(filter)
-    dispatch(actions.setLoadingCount(false))
-    dispatch(actions.setLoadingData(false))
-  }, [fetch, page, pageSize, sorts, lastFilter])
+  return useCallback(async filter => {
+    setLoadingCount(true)
+    const count = await fetchCount(filter, { page, pageSize, sorts })
+    setCount(count)
+    setLoadingCount(false)
+  }, [fetchCount])
+}
 
-  useEffect(() => {
-    load(filter)
-  }, [load, filter])
+const useManifestLoadRows = ({ fetchRows }) => {
+  const { setLoadingData, setRows, page, pageSize, sorts } = useManifestState()
+
+  return useCallback(async filter => {
+    setLoadingData(true)
+    const rows = await fetchRows(filter, { page, pageSize, sorts })
+    setRows(rows)
+    setLoadingData(false)
+  }, [fetchRows])
+}
+
+const Effects = () => {
+
+  // reload count and rows on filter change, and sorts
+
+  // reload count on page 0?
+
+  // how to refresh via button
+
+}
+
+const Manifest = ({ children, fetchRows, fetchCount, filter, definition }) => {
+  // const [state, dispatch] = useReducer(reducer, initialState)
+  // const [lastFilter, setLastFilter] = useState()
+  // const { page, pageSize, sorts } = state
+  // const value = { state, dispatch }
+  // value.state.definition = definition
+
+  useManifestLoadCount({ fetchCount })
+
+  // useEffect(() => {
+  //   loadRows(filter)
+  // }, [load, filter])
+
+  const contextValue = {
+    ...useManifestState(),
+    fetchRows,
+    fetchCount,
+    filter,
+    definition
+  }
 
   return (
-    <manifestContext.Provider value={value}>
-      {children || <DefaultManifestTable />}
+    <manifestContext.Provider value={contextValue}>
+      <Effects />
+      {children}
     </manifestContext.Provider>
   )
 }
 
 Manifest.propTypes = {
-  fetch: PropTypes.func.isRequired,
-  children: PropTypes.element,
+  fetchRows: PropTypes.func.isRequired,
+  fetchCount: PropTypes.func.isRequired,
+  children: PropTypes.any,
   filter: PropTypes.object.isRequired,
   definition: PropTypes.array.isRequired
 }
