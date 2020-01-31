@@ -1,7 +1,7 @@
 import * as actionTypes from './actionTypes'
 
 export const initialState = {
-  loadingData: false,
+  loadingRows: false,
   loadingCount: false,
   page: 0,
   pageSize: 10,
@@ -21,9 +21,9 @@ const setLoadingCount = (state, action) => ({
   loadingCount: action.loadingCount
 })
 
-const setLoadingData = (state, action) => ({
+const setLoadingRows = (state, action) => ({
   ...state,
-  loadingData: action.loadingData
+  loadingRows: action.loadingRows
 })
 
 const setPage = (state, action) => ({
@@ -61,7 +61,7 @@ const setCount = (state, action) => ({
 
 const setFilter = (state, action) => ({
   ...state,
-  filter: action.filter || {},
+  filter: action.filter,
   page: 0
 })
 
@@ -73,7 +73,7 @@ export default (state, action) => {
     case actionTypes.SET_ROWS: return setRows(state, action)
     case actionTypes.SET_COUNT: return setCount(state, action)
     case actionTypes.SET_LOADING_COUNT: return setLoadingCount(state, action)
-    case actionTypes.SET_LOADING_DATA: return setLoadingData(state, action)
+    case actionTypes.SET_LOADING_ROWS: return setLoadingRows(state, action)
     case actionTypes.SET_FILTER: return setFilter(state, action)
     default: return state
   }
