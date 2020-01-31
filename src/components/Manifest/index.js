@@ -24,9 +24,14 @@ const cleanEmpty = x => x || x === 0 ? x : null
 
 const hasChanged = (lastValue, thisValue) => JSON.stringify(cleanEmpty(lastValue)) !== JSON.stringify(cleanEmpty(thisValue))
 
-const Effects = ({ filter }) => {
-  const { setFilter } = useManifest()
+const Effects = ({ fetchRows, fetchCount, filter }) => {
+  const { setLoadingCount, setLoadingRows, setCount, setRows, setFilter } = useManifest()
   const previousFilterRef = useRef()
+
+  const runFetchCount = useBuildFetcher({ fn: setCount, setLoading: setLoadingCount })
+  const runFetchRows = useBuildFetcher({ fn: setRows, setLoading: setLoadingRows, setResult: setRows })
+  const runRefresh = () => null
+  const runReset = () => null
 
   useEffect(() => {
     if (hasChanged(previousFilterRef.current, filter)) setFilter(filter)
@@ -44,26 +49,9 @@ const Effects = ({ filter }) => {
 
 const Manifest = ({ children, fetchRows, fetchCount, filter, definition }) => {
   const state = useManifestState()
-  const { setLoadingCount, setLoadingRows, setCount, setRows } = state
-
-  const fetchCountWrapped = useBuildFetcher({ fn: setCount, setLoading: setLoadingCount })
-  const fetchRowsWrapped = useBuildFetcher({ fn: setRows, setLoading: setLoadingRows, setResult: setRows })
-
-  // fetchRows: fetchRowsWrapped,
-  // fetchCount: fetchCountWrapped
-
-  const contextValue = {
-    ...state,
-    reset: () => null,
-    setPage: () => null,
-    setPageSize: () => null,
-    setSorts: () => null,
-    refresh: () => null
-
-  }
 
   return (
-    <manifestContext.Provider value={contextValue}>
+    <manifestContext.Provider value={state}>
       <Effects filter={filter} />
       {children}
     </manifestContext.Provider>
