@@ -14,7 +14,9 @@ export default () => {
     setRows: bindDispatch(rows => ({ type: types.SET_ROWS, rows })),
     setCount: bindDispatch(count => ({ type: types.SET_COUNT, count })),
     setLoadingCount: bindDispatch(loadingCount => ({ type: types.SET_LOADING_COUNT, loadingCount })),
-    setLoadingData: bindDispatch(loadingData => ({ type: types.SET_LOADING_ROWS, loadingData })),
-    setFilter: bindDispatch(filter => ({ type: types.SET_FILTER, filter }))
+    setLoadingRows: bindDispatch(loadingData => ({ type: types.SET_LOADING_ROWS, loadingData })),
+    setFilter: bindDispatch(filter => ({ type: types.SET_FILTER, filter })),
+    resetState: bindDispatch(() => ({ type: types.RESET })),
+    setError: bindDispatch(error => ({ type: types.SET_ERROR, error }))
   }
 }

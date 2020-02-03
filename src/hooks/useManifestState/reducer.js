@@ -8,7 +8,8 @@ export const initialState = {
   sorts: [],
   count: 0,
   rows: [],
-  filter: {}
+  filter: null,
+  error: null
 }
 
 export const initialSort = {
@@ -65,6 +66,11 @@ const setFilter = (state, action) => ({
   page: 0
 })
 
+const setError = (state, action) => ({
+  ...state,
+  error: action.error
+})
+
 export default (state, action) => {
   switch (action.type) {
     case actionTypes.SET_PAGE: return setPage(state, action)
@@ -75,6 +81,7 @@ export default (state, action) => {
     case actionTypes.SET_LOADING_COUNT: return setLoadingCount(state, action)
     case actionTypes.SET_LOADING_ROWS: return setLoadingRows(state, action)
     case actionTypes.SET_FILTER: return setFilter(state, action)
+    case actionTypes.SET_ERROR: return setError(state, action)
     default: return state
   }
 }
