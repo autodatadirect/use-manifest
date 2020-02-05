@@ -1,22 +1,30 @@
-import { useReducer, useCallback } from 'react'
+import { useReducer, useRef } from 'react'
 import reducer, { initialState } from './reducer'
 import * as types from './actionTypes'
 
+const bindDispatch = (dispatch, actionCreator) => (...args) => dispatch(actionCreator(...args))
+
 export default () => {
   const [state, dispatch] = useReducer(reducer, initialState)
-  const bindDispatch = useCallback(actionCreator => (...args) => dispatch(actionCreator(...args)), [dispatch])
+  const dispatchersRef = useRef()
+
+  if (!dispatchersRef.current) {
+    dispatchersRef.current = {
+      setPage: bindDispatch(dispatch, page => ({ type: types.SET_PAGE, page })),
+      setPageSize: bindDispatch(dispatch, pageSize => ({ type: types.SET_PAGE_SIZE, pageSize })),
+      setSorts: bindDispatch(dispatch, (id, isAsc) => ({ type: types.SET_SORTS, id, isAsc })),
+      setRows: bindDispatch(dispatch, rows => ({ type: types.SET_ROWS, rows })),
+      setCount: bindDispatch(dispatch, count => ({ type: types.SET_COUNT, count })),
+      setLoadingCount: bindDispatch(dispatch, loadingCount => ({ type: types.SET_LOADING_COUNT, loadingCount })),
+      setLoadingRows: bindDispatch(dispatch, loadingData => ({ type: types.SET_LOADING_ROWS, loadingData })),
+      setFilter: bindDispatch(dispatch, filter => ({ type: types.SET_FILTER, filter })),
+      resetState: bindDispatch(dispatch, () => ({ type: types.RESET })),
+      setError: bindDispatch(dispatch, error => ({ type: types.SET_ERROR, error }))
+    }
+  }
 
   return {
     ...state,
-    setPage: bindDispatch(page => ({ type: types.SET_PAGE, page })),
-    setPageSize: bindDispatch(pageSize => ({ type: types.SET_PAGE_SIZE, pageSize })),
-    setSorts: bindDispatch((id, isAsc) => ({ type: types.SET_SORTS, id, isAsc })),
-    setRows: bindDispatch(rows => ({ type: types.SET_ROWS, rows })),
-    setCount: bindDispatch(count => ({ type: types.SET_COUNT, count })),
-    setLoadingCount: bindDispatch(loadingCount => ({ type: types.SET_LOADING_COUNT, loadingCount })),
-    setLoadingRows: bindDispatch(loadingData => ({ type: types.SET_LOADING_ROWS, loadingData })),
-    setFilter: bindDispatch(filter => ({ type: types.SET_FILTER, filter })),
-    resetState: bindDispatch(() => ({ type: types.RESET })),
-    setError: bindDispatch(error => ({ type: types.SET_ERROR, error }))
+    ...dispatchersRef.current
   }
 }

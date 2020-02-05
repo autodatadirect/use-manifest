@@ -5,11 +5,9 @@ import useManifestState from '../../hooks/useManifestState'
 
 export const manifestContext = createContext()
 
-const useBuildFetcher = ({ fn, setLoading, setResult }) => {
-  const { page, pageSize, sorts, setError } = useManifest() || {}
+const useBuildFetcher = ({ fn, setLoading, setResult, setError }) => {
   return useCallback(
-    console.log('building fetcher') ||
-    (async filter => {
+    async (filter, { page, pageSize, sorts }) => {
       console.log('INVOKE!')
       setLoading(true)
       try {
@@ -21,23 +19,44 @@ const useBuildFetcher = ({ fn, setLoading, setResult }) => {
         console.log('fetch failed', error)
       }
       setLoading(false)
-    })
-    , [page, pageSize, sorts, setError, fn, setLoading, setResult])
+    }
+    , [setError, fn, setLoading, setResult])
 }
 
 const cleanEmpty = x => x || x === 0 ? x : null
 
 const hasChanged = (lastValue, thisValue) => JSON.stringify(cleanEmpty(lastValue)) !== JSON.stringify(cleanEmpty(thisValue))
 
+const useDetectChange = (name, value) => {
+  const ref = useRef()
+
+  if (ref.current !== value) {
+    console.log('!' + name + ' has changed')
+    ref.current = value
+  }
+}
+
 const Effects = ({ fetchRows, fetchCount, filter }) => {
-  const { setFilter, setLoadingCount, setLoadingRows, setRows, setCount, page, pageSize } = useManifest()
+  const { setFilter, setLoadingCount, setLoadingRows, setRows, setCount, page, pageSize, sorts, setError } = useManifest()
 
   const previousFilterRef = useRef()
   const previuosPageRef = useRef()
   const previousPageSizeRef = useRef()
 
-  const runFetchCount = useBuildFetcher({ fn: fetchCount, setLoading: setLoadingCount, setResult: setCount })
-  const runFetchRows = useBuildFetcher({ fn: fetchRows, setLoading: setLoadingRows, setResult: setRows })
+  const runFetchCount = useBuildFetcher({ fn: fetchCount, setLoading: setLoadingCount, setResult: setCount, setError })
+  const runFetchRows = useBuildFetcher({ fn: fetchRows, setLoading: setLoadingRows, setResult: setRows, setError })
+
+  useDetectChange('')
+
+  useDetectChange('setFilter', setFilter)
+  useDetectChange('setLoadingCount', setLoadingCount)
+  useDetectChange('setLoadingRows', setLoadingRows)
+  useDetectChange('setRows', setRows)
+  useDetectChange('setCount', setCount)
+  useDetectChange('page', page)
+  useDetectChange('pageSize', pageSize)
+  useDetectChange('sorts', sorts)
+  useDetectChange('setError', setError)
 
   useEffect(() => {
     // TODO see if the equality check can be removed in favor of idendity only
@@ -47,7 +66,7 @@ const Effects = ({ fetchRows, fetchCount, filter }) => {
 
   if (page !== previuosPageRef.current) {
     console.log('page changed!', previuosPageRef.current, page)
-    runFetchRows()
+    runFetchRows(filter, { page, pageSize, sorts })
     previuosPageRef.current = page
   }
 
