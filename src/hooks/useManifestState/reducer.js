@@ -6,7 +6,7 @@ export const initialState = {
   page: 0,
   pageSize: 10,
   sorts: [],
-  count: 0,
+  count: null,
   rows: [],
   filter: null,
   error: null
@@ -29,7 +29,8 @@ const setLoadingRows = (state, action) => ({
 
 const setPage = (state, action) => ({
   ...state,
-  page: action.page
+  page: action.page,
+  count: action.page ? state.count : null
 })
 
 const setPageSize = (state, action) => ({

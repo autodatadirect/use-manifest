@@ -7,6 +7,7 @@ export default ({ columnIndex, rowIndex }) => {
   const value = row[def.id]
 
   return {
+    ...def,
     sorts,
     def,
     row,

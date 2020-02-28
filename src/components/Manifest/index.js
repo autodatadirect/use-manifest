@@ -1,26 +1,47 @@
-import React, { createContext, useEffect, useRef, useCallback } from 'react'
+import React, { createContext, useRef, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import useManifest from '../../hooks/useManifest'
 import useManifestState from '../../hooks/useManifestState'
+import DefaultManifestTable from '../DefaultManifestTable'
 
 export const manifestContext = createContext()
 
-const useBuildFetcher = ({ fn, setLoading, setResult, setError }) => {
+let rowCallId = 0
+let countCallId = 0
+
+const useCountFetcher = ({ fetchCount }) => {
+  const { setLoadingCount, setCount, setError } = useManifest()
   return useCallback(
-    async (filter, { page, pageSize, sorts }) => {
-      console.log('INVOKE!')
-      setLoading(true)
+    async filter => {
+      const id = ++countCallId
+      setLoadingCount(true)
       try {
-        const rows = await fn(filter, { page, pageSize, sorts })
-        console.log('fetch done', rows)
-        setResult(rows)
+        const count = await fetchCount(filter)
+        if (id !== countCallId) return
+        setCount(count)
       } catch (error) {
         setError(error)
-        console.log('fetch failed', error)
       }
-      setLoading(false)
+      setLoadingCount(false)
     }
-    , [setError, fn, setLoading, setResult])
+    , [setError, fetchCount, setLoadingCount, setCount])
+}
+
+const useRowFetcher = ({ fetchRows }) => {
+  const { setLoadingRows, setRows, setError } = useManifest()
+  return useCallback(
+    async (filter, { page, pageSize, sorts }) => {
+      const id = ++rowCallId
+      setLoadingRows(true)
+      try {
+        const rows = await fetchRows(filter, { page, pageSize, sorts })
+        if (id !== rowCallId) return
+        setRows(rows)
+      } catch (error) {
+        setError(error)
+      }
+      setLoadingRows(false)
+    }, [setError, fetchRows, setLoadingRows, setRows])
 }
 
 const cleanEmpty = x => x || x === 0 ? x : null
@@ -29,83 +50,53 @@ const hasChanged = (lastValue, thisValue) => JSON.stringify(cleanEmpty(lastValue
 
 const useDetectChange = (name, value) => {
   const ref = useRef()
-
   if (ref.current !== value) {
-    console.log('!' + name + ' has changed')
     ref.current = value
+    return true
   }
+  return false
 }
 
 const Effects = ({ fetchRows, fetchCount, filter }) => {
-  const { setFilter, setLoadingCount, setLoadingRows, setRows, setCount, page, pageSize, sorts, setError } = useManifest()
+  const manifest = useManifest()
+  const { page, pageSize, sorts, setFilter, filter: stateFilter } = manifest
 
-  const previousFilterRef = useRef()
-  const previuosPageRef = useRef()
-  const previousPageSizeRef = useRef()
+  const runFetchCount = useCountFetcher({ fetchCount })
+  const runFetchRows = useRowFetcher({ fetchRows })
 
-  const runFetchCount = useBuildFetcher({ fn: fetchCount, setLoading: setLoadingCount, setResult: setCount, setError })
-  const runFetchRows = useBuildFetcher({ fn: fetchRows, setLoading: setLoadingRows, setResult: setRows, setError })
+  const pageChanged = useDetectChange('page', page)
+  const pageSizeChanged = useDetectChange('pageSize', pageSize)
+  const sortsChanged = useDetectChange('sorts', sorts)
+  const filterChanged = hasChanged(filter, stateFilter)
 
-  useDetectChange('')
-
-  useDetectChange('setFilter', setFilter)
-  useDetectChange('setLoadingCount', setLoadingCount)
-  useDetectChange('setLoadingRows', setLoadingRows)
-  useDetectChange('setRows', setRows)
-  useDetectChange('setCount', setCount)
-  useDetectChange('page', page)
-  useDetectChange('pageSize', pageSize)
-  useDetectChange('sorts', sorts)
-  useDetectChange('setError', setError)
-
-  useEffect(() => {
-    // TODO see if the equality check can be removed in favor of idendity only
-    if (hasChanged(previousFilterRef.current, filter)) setFilter(filter)
-    previousFilterRef.current = filter
-  }, [filter, setFilter])
-
-  if (page !== previuosPageRef.current) {
-    console.log('page changed!', previuosPageRef.current, page)
-    runFetchRows(filter, { page, pageSize, sorts })
-    previuosPageRef.current = page
+  if (filterChanged) {
+    setFilter(filter)
   }
 
-  // reload count and rows on filter change, and sorts
-
-  // reload count on page 0?
-
-  // how to refresh via button
+  if (pageChanged || pageSizeChanged || filterChanged) {
+    runFetchRows(filter, { page, pageSize, sorts })
+    if (!page || filterChanged) {
+      runFetchCount(filter, { page, pageSize, sorts })
+    }
+  } else if (sortsChanged) {
+    runFetchRows(filter, { page, pageSize, sorts })
+  }
 
   return null
 }
-
-// const useManifestFetchers = ({ state, fetchRows, fetchCount }) => {
-//   const { setLoadingCount, setLoadingRows, setCount, setRows, resetState } = state
-
-//   // const runRefresh = useCallback(() => Promise.all(runFetchCount, runFetchRows), [runFetchCount, runFetchRows])
-//   // const runReset = () => resetState()
-
-//   return {
-//     runFetchCount,
-//     runFetchRows,
-//     runRefresh,
-//     runReset
-//   }
-// }
 
 const Manifest = ({ children, fetchRows, fetchCount, filter, definition }) => {
   const state = useManifestState()
 
   const contextValue = {
     ...state,
-    // ...useManifestFetchers({ state, fetchRows, fetchCount }),
     definition
   }
 
   return (
     <manifestContext.Provider value={contextValue}>
       <Effects filter={filter} fetchCount={fetchCount} fetchRows={fetchRows} />
-      {children}
+      {children || <DefaultManifestTable />}
     </manifestContext.Provider>
   )
 }

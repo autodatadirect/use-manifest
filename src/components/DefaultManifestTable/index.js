@@ -6,7 +6,6 @@ import useManifest from '../../hooks/useManifest'
 
 const DefaultManifestTable = ({ className }) => {
   const { definition, rows, loadingData } = useManifest()
-
   return (
     <div className={`manifest-table ${className || ''} ${loadingData && 'loading'}`}>
       <Table columnCount={definition.length} rowCount={rows.length} />
