@@ -1,8 +1,8 @@
 import React, { createContext, useRef, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import useManifest from '../../hooks/useManifest'
-import useManifestState from '../../hooks/useManifestState'
-import DefaultManifestTable from '../DefaultManifestTable'
+import useManifest from '../hooks/useManifest'
+import useManifestState from '../hooks/useManifestState'
+import DefaultManifestTable from './DefaultManifestTable'
 
 export const manifestContext = createContext()
 

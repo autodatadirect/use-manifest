@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
-import usePager from '../../hooks/usePager'
+import usePager from '../hooks/usePager'
 
 const Pager = ({ className }) => {
   const { page, pages, count, totalPages, loading } = usePager({ numberOfPages: 5 })

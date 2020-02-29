@@ -14,7 +14,8 @@
   "keywords": [
     "manifest",
     "react",
-    "table"
+    "table",
+    "hooks"
   ],
   "author": "Auto Data Direct, Inc.",
   "license": "MIT",

@@ -1,5 +1,5 @@
 import React from 'react'
-import useManifest from '../../hooks/useManifest'
+import useManifest from '../hooks/useManifest'
 
 export default () => {
   const state = useManifest()
