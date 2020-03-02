@@ -44,10 +44,6 @@ const useRowFetcher = ({ fetchRows }) => {
     }, [setError, fetchRows, setLoadingRows, setRows])
 }
 
-const cleanEmpty = x => x || x === 0 ? x : null
-
-const hasChanged = (lastValue, thisValue) => JSON.stringify(cleanEmpty(lastValue)) !== JSON.stringify(cleanEmpty(thisValue))
-
 const useDetectChange = (name, value) => {
   const ref = useRef()
   if (ref.current !== value) {
@@ -57,9 +53,8 @@ const useDetectChange = (name, value) => {
   return false
 }
 
-const Effects = ({ fetchRows, fetchCount, filter }) => {
-  const manifest = useManifest()
-  const { page, pageSize, sorts, setFilter, filter: stateFilter } = manifest
+const Effects = ({ fetchRows, fetchCount }) => {
+  const { page, pageSize, sorts, filter } = useManifest()
 
   const runFetchCount = useCountFetcher({ fetchCount })
   const runFetchRows = useRowFetcher({ fetchRows })
@@ -67,11 +62,7 @@ const Effects = ({ fetchRows, fetchCount, filter }) => {
   const pageChanged = useDetectChange('page', page)
   const pageSizeChanged = useDetectChange('pageSize', pageSize)
   const sortsChanged = useDetectChange('sorts', sorts)
-  const filterChanged = hasChanged(filter, stateFilter)
-
-  if (filterChanged) {
-    setFilter(filter)
-  }
+  const filterChanged = useDetectChange('filter', filter)
 
   if (pageChanged || pageSizeChanged || filterChanged) {
     runFetchRows(filter, { page, pageSize, sorts })
@@ -85,7 +76,7 @@ const Effects = ({ fetchRows, fetchCount, filter }) => {
   return null
 }
 
-const Manifest = ({ children, fetchRows, fetchCount, filter, definition }) => {
+const Manifest = ({ children, fetchRows, fetchCount, definition }) => {
   const state = useManifestState()
 
   const contextValue = {
@@ -95,7 +86,7 @@ const Manifest = ({ children, fetchRows, fetchCount, filter, definition }) => {
 
   return (
     <manifestContext.Provider value={contextValue}>
-      <Effects filter={filter} fetchCount={fetchCount} fetchRows={fetchRows} />
+      <Effects fetchCount={fetchCount} fetchRows={fetchRows} />
       {children || <DefaultManifestTable />}
     </manifestContext.Provider>
   )
