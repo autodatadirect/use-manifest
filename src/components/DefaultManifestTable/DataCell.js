@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import SimpleCell from '../SimpleCell'
+import SimpleCell from '../DefaultCell'
 import useCell from '../../hooks/useCell'
 
 const Cell = ({ columnIndex, rowIndex }) => {

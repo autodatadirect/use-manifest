@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
-import HeaderCell from '../HeaderCell'
-import Cell from '../Cell'
+import HeaderCell from './HeaderCell'
+import Cell from './DataCell'
 import integerSequence from '../../utils/integerSequence'
 
 const Table = ({ className, columnCount, rowCount }) => {
