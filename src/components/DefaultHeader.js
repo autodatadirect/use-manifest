@@ -4,17 +4,15 @@ import useHeaderCell from '../hooks/useHeaderCell'
 import { ASCENDING, DESCENDING } from '../constants/sortDirections'
 
 const SimpleHeader = ({ columnIndex }) => {
-  const { setSorts, id, label, sortDirection, sortable } = useHeaderCell(columnIndex)
+  const { setSortDirection, label, sortDirection, sortable } = useHeaderCell(columnIndex)
 
   const handleSort = useCallback(() => {
     if (!sortable) {
       return
     }
 
-    const nextDirection = sortDirection === ASCENDING ? DESCENDING : ASCENDING
-
-    setSorts(id, nextDirection)
-  }, [setSorts, id, sortDirection])
+    setSortDirection(sortDirection !== ASCENDING ? ASCENDING : DESCENDING)
+  }, [sortable, sortDirection, setSortDirection])
 
   return (
     <div className={sortClass({ sortable, sortDirection })} onClick={handleSort}>
