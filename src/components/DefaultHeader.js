@@ -1,18 +1,22 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
-import useColumn from '../hooks/useHeaderCell'
+import useHeaderCell from '../hooks/useHeaderCell'
 
 const SimpleHeader = ({ columnIndex }) => {
-  const { setSorts, sorts, id, label } = useColumn(columnIndex)
+  const { setSorts, id, label, columnSort, sortable } = useHeaderCell(columnIndex)
 
   const handleSort = useCallback(() => {
-    const isAsc = sorts.length && sorts[0].id === id ? !sorts[0].isAsc : true
+    if (!sortable) {
+      return
+    }
+
+    const isAsc = columnSort ? !columnSort.isAsc : true
 
     setSorts(id, isAsc)
-  }, [setSorts, id, sorts])
+  }, [setSorts, id, columnSort])
 
   return (
-    <div onClick={handleSort}>
+    <div className={sortClass({ sortable, columnSort })} onClick={handleSort}>
       {label}
     </div>
   )
@@ -20,6 +24,24 @@ const SimpleHeader = ({ columnIndex }) => {
 
 SimpleHeader.propTypes = {
   columnIndex: PropTypes.number.isRequired
+}
+
+const sortClass = ({ sortable, columnSort }) => {
+  const classes = []
+
+  if (sortable) {
+    classes.push('sortable')
+  }
+
+  if (columnSort && columnSort.isAsc) {
+    classes.push('sorted')
+    classes.push('sorted-asc')
+  } else if (columnSort && !columnSort.isAsc) {
+    classes.push('sorted')
+    classes.push('sorted-desc')
+  }
+
+  return classes.join(' ')
 }
 
 export default SimpleHeader
