@@ -1,4 +1,5 @@
 import * as actionTypes from './actionTypes'
+import { ASCENDING } from '../../constants/sortDirections'
 
 export const initialState = {
   loadingRows: false,
@@ -14,7 +15,7 @@ export const initialState = {
 
 export const initialSort = {
   id: '',
-  isAsc: true
+  direction: ASCENDING
 }
 
 const setLoadingCount = (state, action) => ({
@@ -45,7 +46,7 @@ const setSorts = (state, action) => ({
     {
       ...initialSort,
       id: action.id,
-      isAsc: action.isAsc
+      direction: action.direction
     }
   ],
   page: 0
