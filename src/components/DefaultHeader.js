@@ -1,22 +1,23 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import useHeaderCell from '../hooks/useHeaderCell'
+import { ASCENDING, DESCENDING } from '../constants/sortDirections'
 
 const SimpleHeader = ({ columnIndex }) => {
-  const { setSorts, id, label, columnSort, sortable } = useHeaderCell(columnIndex)
+  const { setSorts, id, label, sortDirection, sortable } = useHeaderCell(columnIndex)
 
   const handleSort = useCallback(() => {
     if (!sortable) {
       return
     }
 
-    const isAsc = columnSort ? !columnSort.isAsc : true
+    const nextDirection = sortDirection === ASCENDING ? DESCENDING : ASCENDING
 
-    setSorts(id, isAsc)
-  }, [setSorts, id, columnSort])
+    setSorts(id, nextDirection)
+  }, [setSorts, id, sortDirection])
 
   return (
-    <div className={sortClass({ sortable, columnSort })} onClick={handleSort}>
+    <div className={sortClass({ sortable, sortDirection })} onClick={handleSort}>
       {label}
     </div>
   )
@@ -26,17 +27,17 @@ SimpleHeader.propTypes = {
   columnIndex: PropTypes.number.isRequired
 }
 
-const sortClass = ({ sortable, columnSort }) => {
+const sortClass = ({ sortable, sortDirection }) => {
   const classes = []
 
   if (sortable) {
     classes.push('sortable')
   }
 
-  if (columnSort && columnSort.isAsc) {
+  if (sortDirection === ASCENDING) {
     classes.push('sorted')
     classes.push('sorted-asc')
-  } else if (columnSort && !columnSort.isAsc) {
+  } else if (sortDirection === DESCENDING) {
     classes.push('sorted')
     classes.push('sorted-desc')
   }

@@ -1,16 +1,19 @@
 import { useMemo } from 'react'
 import useManifest from './useManifest'
+import { NOT_SORTED } from '../constants/sortDirections'
 
 export default (index) => {
   const { definition, setSorts, sorts, loading } = useManifest()
   const def = definition[index]
-  const columnSort = useMemo(() => sorts.find(s => s.id === def.id), [sorts, def])
+  const sort = useMemo(() => sorts.find(s => s.id === def.id), [sorts, def])
+
+  const sortDirection = !sort ? NOT_SORTED : sort.direction
 
   return {
     ...def,
     loading,
     sorts,
     setSorts,
-    columnSort
+    sortDirection
   }
 }
