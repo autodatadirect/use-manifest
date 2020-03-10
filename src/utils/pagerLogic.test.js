@@ -16,7 +16,7 @@ describe('pagerLogic', () => {
     const d = (numberOfPages, currentPage, pageSize, count) => ({ numberOfPages, currentPage, pageSize, count })
 
     it('returns an array', () => {
-      expect(typeof pagerLogic.determinePages(3, 0, 10, 100).map).toBeTruthy()
+      expect(typeof pagerLogic.determinePages(3, 0, 10, 100).map).toBeFalsy()
     })
     it('with length = numberOfPages if numberOfPages < total pages', () => {
       expect(pagerLogic.determinePages(d(3, 0, 10, 100)).length).toBe(3)
