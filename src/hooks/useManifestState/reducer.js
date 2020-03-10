@@ -1,18 +1,21 @@
-import * as actionTypes from '../constants/actionTypes'
+import * as actionTypes from './actionTypes'
+import { ASCENDING } from '../../constants/sortDirections'
 
 export const initialState = {
-  loadingDate: false,
+  loadingRows: false,
   loadingCount: false,
   page: 0,
   pageSize: 10,
   sorts: [],
-  count: 0,
-  rows: []
+  count: null,
+  rows: [],
+  filter: null,
+  error: null
 }
 
 export const initialSort = {
   id: '',
-  isAsc: true
+  direction: ASCENDING
 }
 
 const setLoadingCount = (state, action) => ({
@@ -20,14 +23,15 @@ const setLoadingCount = (state, action) => ({
   loadingCount: action.loadingCount
 })
 
-const setLoadingData = (state, action) => ({
+const setLoadingRows = (state, action) => ({
   ...state,
-  loadingData: action.loadingData
+  loadingRows: action.loadingRows
 })
 
 const setPage = (state, action) => ({
   ...state,
-  page: action.page
+  page: action.page,
+  count: action.page ? state.count : null
 })
 
 const setPageSize = (state, action) => ({
@@ -42,9 +46,10 @@ const setSorts = (state, action) => ({
     {
       ...initialSort,
       id: action.id,
-      isAsc: action.isAsc
+      direction: action.direction
     }
-  ]
+  ],
+  page: 0
 })
 
 const setRows = (state, action) => ({
@@ -57,6 +62,17 @@ const setCount = (state, action) => ({
   count: action.count
 })
 
+const setFilter = (state, action) => ({
+  ...state,
+  filter: action.filter,
+  page: 0
+})
+
+const setError = (state, action) => ({
+  ...state,
+  error: action.error
+})
+
 export default (state, action) => {
   switch (action.type) {
     case actionTypes.SET_PAGE: return setPage(state, action)
@@ -65,7 +81,9 @@ export default (state, action) => {
     case actionTypes.SET_ROWS: return setRows(state, action)
     case actionTypes.SET_COUNT: return setCount(state, action)
     case actionTypes.SET_LOADING_COUNT: return setLoadingCount(state, action)
-    case actionTypes.SET_LOADING_DATA: return setLoadingData(state, action)
+    case actionTypes.SET_LOADING_ROWS: return setLoadingRows(state, action)
+    case actionTypes.SET_FILTER: return setFilter(state, action)
+    case actionTypes.SET_ERROR: return setError(state, action)
     default: return state
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "use-manifest",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A paginated table implementation using React Hooks",
   "main": "./dist/index.js",
   "repository": "https://github.com/autodatadirect/use-manifest",
@@ -14,17 +14,18 @@
   "keywords": [
     "manifest",
     "react",
-    "table"
+    "table",
+    "hooks"
   ],
   "author": "Auto Data Direct, Inc.",
   "license": "MIT",
   "devDependencies": {
-    "@babel/cli": "^7.7.5",
-    "@babel/core": "^7.7.5",
-    "@babel/plugin-proposal-object-rest-spread": "^7.7.7",
-    "@babel/preset-env": "^7.7.6",
-    "@babel/preset-react": "^7.7.4",
-    "@babel/runtime": "^7.7.6",
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.8.3",
+    "@babel/preset-env": "^7.8.4",
+    "@babel/preset-react": "^7.8.3",
+    "@babel/runtime": "^7.8.4",
     "jest": "^24.9.0",
     "snazzy": "^8.0.0",
     "standard": "^14.3.1"

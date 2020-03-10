@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import SimpleHeader from '../SimpleHeader'
+import SimpleHeader from '../DefaultHeader'
 import useHeaderCell from '../../hooks/useHeaderCell'
 
 const HeaderCell = ({ columnIndex }) => {

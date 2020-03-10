@@ -1,17 +1,23 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Table from '../Table'
-import Controls from '../Controls'
+import Table from './Table'
+import Controls from './Controls'
 import useManifest from '../../hooks/useManifest'
 
-const DefaultManifestTable = ({ className }) => {
-  const { definition, rows, loadingData } = useManifest()
+const computeClasses = ({ className = '', loadingRows, loadingCount }) => {
+  let s = className
+  if (loadingCount || loadingRows) s += ' loading'
+  return s
+}
 
+const DefaultManifestTable = ({ className }) => {
+  const { definition, rows, loadingRows, loadingCount } = useManifest()
+  const finalClassName = computeClasses({ className, loadingRows, loadingCount })
   return (
-    <div className={`manifest-table ${className || ''} ${loadingData && 'loading'}`}>
-      <Table columnCount={definition.length} rowCount={rows.length} />
+    <>
+      <Table className={finalClassName} columnCount={definition.length} rowCount={rows.length} />
       <Controls />
-    </div>
+    </>
   )
 }
 
