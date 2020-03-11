@@ -6,13 +6,15 @@ import integerSequence from '../../utils/integerSequence'
 import useManifest from '../../hooks/useManifest'
 import useCell from '../../hooks/useCell'
 
+const EMPTY_PROPS = {}
+
 const Table = ({ className, columnCount, rowCount, trPropsHandler, tdPropsHandler }) => {
-  const columnIndexs = useMemo(() => integerSequence(columnCount), [columnCount])
+  const columnIndexes = useMemo(() => integerSequence(columnCount), [columnCount])
 
   return (
     <table className={`manifest-table ${className || ''}`}>
-      <Headers columnIndexs={columnIndexs} />
-      <Rows rowCount={rowCount} columnIndexs={columnIndexs} trPropsHandler={trPropsHandler} tdPropsHandler={tdPropsHandler} />
+      <Headers columnIndexes={columnIndexes} />
+      <Rows rowCount={rowCount} columnIndexes={columnIndexes} trPropsHandler={trPropsHandler} tdPropsHandler={tdPropsHandler} />
     </table>
   )
 }
@@ -24,55 +26,57 @@ Table.propTypes = {
   tdPropsHandler: PropTypes.func.isRequired
 }
 
-const Headers = ({ columnIndexs }) =>
+const Headers = ({ columnIndexes }) =>
   <thead>
     <tr>
-      {columnIndexs.map(i => <th key={i}><HeaderCell columnIndex={i} /></th>)}
+      {columnIndexes.map(i => <th key={i}><HeaderCell columnIndex={i} /></th>)}
     </tr>
   </thead>
 
 Headers.propTypes = {
-  columnIndexs: PropTypes.array.isRequired
+  columnIndexes: PropTypes.array.isRequired
 }
 
-const Rows = ({ rowCount, columnIndexs, trPropsHandler, tdPropsHandler }) => {
+const Rows = ({ rowCount, columnIndexes, trPropsHandler, tdPropsHandler }) => {
   const rowIndexs = useMemo(() => integerSequence(rowCount), [rowCount])
 
   return (
     <tbody>
-      {rowIndexs.map(i => <TableRow key={i} rowIndex={i} columnIndexs={columnIndexs} trPropsHandler={trPropsHandler} tdPropsHandler={tdPropsHandler} />)}
+      {rowIndexs.map(i => <TableRow key={i} rowIndex={i} columnIndexes={columnIndexes} trPropsHandler={trPropsHandler} tdPropsHandler={tdPropsHandler} />)}
     </tbody>
   )
 }
 
 Rows.propTypes = {
   rowCount: PropTypes.number.isRequired,
-  columnIndexs: PropTypes.array.isRequired,
+  columnIndexes: PropTypes.array.isRequired,
   trPropsHandler: PropTypes.func.isRequired,
   tdPropsHandler: PropTypes.func.isRequired
 }
 
-const TableRow = ({ rowIndex, columnIndexs, trPropsHandler, tdPropsHandler }) => {
+const TableRow = ({ rowIndex, columnIndexes, trPropsHandler, tdPropsHandler }) => {
   const state = useManifest()
   const row = state.rows[rowIndex]
+  const props = trPropsHandler({ rowIndex, row }) || EMPTY_PROPS
   return (
-    <tr {...trPropsHandler({ rowIndex, row })}>
-      {columnIndexs.map(columnIndex => <TableData key={columnIndex} rowIndex={rowIndex} columnIndex={columnIndex} tdPropsHandler={tdPropsHandler} />)}
+    <tr {...props}>
+      {columnIndexes.map(columnIndex => <TableData key={columnIndex} rowIndex={rowIndex} columnIndex={columnIndex} tdPropsHandler={tdPropsHandler} />)}
     </tr>
   )
 }
 
 TableRow.propTypes = {
   rowIndex: PropTypes.number.isRequired,
-  columnIndexs: PropTypes.array.isRequired,
+  columnIndexes: PropTypes.array.isRequired,
   trPropsHandler: PropTypes.func.isRequired,
   tdPropsHandler: PropTypes.func.isRequired
 }
 
 const TableData = ({ rowIndex, columnIndex, tdPropsHandler }) => {
   const { row, id, label, value, def, sorts } = useCell({ rowIndex, columnIndex })
+  const props = tdPropsHandler({ rowIndex, columnIndex, row, id, label, value, def, sorts }) || EMPTY_PROPS
   return (
-    <td {...tdPropsHandler({ rowIndex, columnIndex, row, id, label, value, def, sorts })} key={columnIndex + '.' + rowIndex}>
+    <td {...props} key={columnIndex + '.' + rowIndex}>
       <Cell columnIndex={columnIndex} rowIndex={rowIndex} />
     </td>
   )
@@ -80,7 +84,7 @@ const TableData = ({ rowIndex, columnIndex, tdPropsHandler }) => {
 
 TableData.propTypes = {
   rowIndex: PropTypes.number.isRequired,
-  columnIndexs: PropTypes.array.isRequired,
+  columnIndexes: PropTypes.array.isRequired,
   tdPropsHandler: PropTypes.func.isRequired
 }
 
