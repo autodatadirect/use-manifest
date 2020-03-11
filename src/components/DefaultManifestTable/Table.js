@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import HeaderCell from './HeaderCell'
 import Cell from './DataCell'
 import integerSequence from '../../utils/integerSequence'
-import useManifest from 'use-manifest/src/hooks/useManifest'
-import useCell from 'use-manifest/src/hooks/useCell'
+import useManifest from '../../hooks/useManifest'
+import useCell from '../../hooks/useCell'
 
 const Table = ({ className, columnCount, rowCount, trPropsHandler, tdPropsHandler }) => {
   const columnIndexs = useMemo(() => integerSequence(columnCount), [columnCount])
@@ -56,7 +56,7 @@ const TableRow = ({ rowIndex, columnIndexs, trPropsHandler, tdPropsHandler }) =>
   const state = useManifest()
   const row = state.rows[rowIndex]
   return (
-    <tr {...trPropsHandler({ rowIndex, columnIndexs, ...state, row })}>
+    <tr {...trPropsHandler({ rowIndex, row })}>
       {columnIndexs.map(columnIndex => <TableData key={columnIndex} rowIndex={rowIndex} columnIndex={columnIndex} tdPropsHandler={tdPropsHandler} />)}
     </tr>
   )
@@ -70,9 +70,9 @@ TableRow.propTypes = {
 }
 
 const TableData = ({ rowIndex, columnIndex, tdPropsHandler }) => {
-  const cellData = useCell({ rowIndex, columnIndex })
+  const { row, id, label, value, def, sorts } = useCell({ rowIndex, columnIndex })
   return (
-    <td {...tdPropsHandler({ rowIndex, columnIndex, ...cellData })} key={columnIndex + '.' + rowIndex}>
+    <td {...tdPropsHandler({ rowIndex, columnIndex, row, id, label, value, def, sorts })} key={columnIndex + '.' + rowIndex}>
       <Cell columnIndex={columnIndex} rowIndex={rowIndex} />
     </td>
   )

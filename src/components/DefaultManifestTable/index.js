@@ -5,8 +5,7 @@ import Controls from './Controls'
 import useManifest from '../../hooks/useManifest'
 
 const EMPTY_PROPS = {}
-const DEFAULT_TR_PROPS_HANDLER = () => EMPTY_PROPS
-const DEFAULT_TD_PROPS_HANDLER = () => EMPTY_PROPS
+const EMPTY_PROPS_HANDLER = () => EMPTY_PROPS
 
 const computeClasses = ({ className = '', loadingRows, loadingCount }) => {
   let s = className
@@ -14,7 +13,7 @@ const computeClasses = ({ className = '', loadingRows, loadingCount }) => {
   return s
 }
 
-const DefaultManifestTable = ({ className, trPropsHandler = DEFAULT_TR_PROPS_HANDLER, tdPropsHandler = DEFAULT_TD_PROPS_HANDLER }) => {
+const DefaultManifestTable = ({ className, trPropsHandler = EMPTY_PROPS_HANDLER, tdPropsHandler = EMPTY_PROPS_HANDLER }) => {
   const { definition, rows, loadingRows, loadingCount } = useManifest()
   const finalClassName = computeClasses({ className, loadingRows, loadingCount })
   return (
