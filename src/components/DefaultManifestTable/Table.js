@@ -84,7 +84,7 @@ const TableData = ({ rowIndex, columnIndex, tdPropsHandler }) => {
 
 TableData.propTypes = {
   rowIndex: PropTypes.number.isRequired,
-  columnIndexes: PropTypes.array.isRequired,
+  columnIndex: PropTypes.number.isRequired,
   tdPropsHandler: PropTypes.func.isRequired
 }
 
