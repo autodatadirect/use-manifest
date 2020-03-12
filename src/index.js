@@ -6,6 +6,9 @@ import useHeaderCell from './hooks/useHeaderCell'
 import usePager from './hooks/usePager'
 import DefaultTable from './components/DefaultTable'
 import DefaultControls from './components/DefaultControls'
+import DefaultControlsPageSizer from './components/DefaultControls/PageSizer'
+import DefaultControlsStatus from './components/DefaultControls/Status'
+import ButtonPager from './components/ButtonPager'
 import { ASCENDING, DESCENDING, NOT_SORTED } from './constants/sortDirections'
 
 export {
@@ -17,6 +20,9 @@ export {
   Debug,
   DefaultTable,
   DefaultControls,
+  DefaultControlsPageSizer,
+  DefaultControlsStatus,
+  ButtonPager,
   ASCENDING,
   DESCENDING,
   NOT_SORTED

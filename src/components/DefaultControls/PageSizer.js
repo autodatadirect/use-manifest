@@ -6,7 +6,7 @@ const DEFAULT_PAGE_SIZES = [10, 20, 50, 100, 200]
 
 const DEFAULT_TEXT_GENERATOR = size => `Show ${size} entries`
 
-const PageSizer = ({ pageSizes = DEFAULT_PAGE_SIZES, pageSizeLabelGenerator = DEFAULT_TEXT_GENERATOR }) => {
+const PageSizer = ({ className, pageSizes = DEFAULT_PAGE_SIZES, pageSizeLabelGenerator = DEFAULT_TEXT_GENERATOR }) => {
   const { pageSize, setPageSize } = useManifest()
 
   const handlePageSizeChange = useCallback(ev => {
@@ -14,7 +14,7 @@ const PageSizer = ({ pageSizes = DEFAULT_PAGE_SIZES, pageSizeLabelGenerator = DE
   }, [setPageSize])
 
   return (
-    <select value={pageSize} onChange={handlePageSizeChange}>
+    <select className={className} value={pageSize} onChange={handlePageSizeChange}>
       {pageSizes.map(size => <option key={size} value={size}>{pageSizeLabelGenerator(size)}</option>)}
     </select>
   )
@@ -22,7 +22,8 @@ const PageSizer = ({ pageSizes = DEFAULT_PAGE_SIZES, pageSizeLabelGenerator = DE
 
 PageSizer.propTypes = {
   pageSizes: propTypes.arrayOf(propTypes.number),
-  pageSizeLableGenerator: propTypes.func
+  pageSizeLableGenerator: propTypes.func,
+  className: propTypes.string
 }
 
 export default PageSizer
