@@ -2,7 +2,8 @@ import React, { createContext, useRef, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import useManifest from '../hooks/useManifest'
 import useManifestState from '../hooks/useManifestState'
-import DefaultManifestTable from './DefaultManifestTable'
+import DefaultTable from './DefaultTable'
+import DefaultControls from './DefaultControls'
 
 export const manifestContext = createContext()
 
@@ -76,6 +77,12 @@ const Effects = ({ fetchRows, fetchCount }) => {
   return null
 }
 
+const DefaultChildren = () =>
+  <>
+    <DefaultTable />
+    <DefaultControls />
+  </>
+
 const Manifest = ({ children, fetchRows, fetchCount, definition }) => {
   const state = useManifestState()
 
@@ -87,7 +94,7 @@ const Manifest = ({ children, fetchRows, fetchCount, definition }) => {
   return (
     <manifestContext.Provider value={contextValue}>
       <Effects fetchCount={fetchCount} fetchRows={fetchRows} />
-      {children || <DefaultManifestTable />}
+      {children || <DefaultChildren />}
     </manifestContext.Provider>
   )
 }
