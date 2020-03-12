@@ -4,7 +4,8 @@ import Debug from './components/Debug'
 import useCell from './hooks/useCell'
 import useHeaderCell from './hooks/useHeaderCell'
 import usePager from './hooks/usePager'
-import DefaultManifestTable from './components/DefaultManifestTable'
+import DefaultTable from './components/DefaultTable'
+import DefaultControls from './components/DefaultControls'
 import { ASCENDING, DESCENDING, NOT_SORTED } from './constants/sortDirections'
 
 export {
@@ -14,7 +15,8 @@ export {
   usePager,
   Manifest,
   Debug,
-  DefaultManifestTable,
+  DefaultTable,
+  DefaultControls,
   ASCENDING,
   DESCENDING,
   NOT_SORTED
