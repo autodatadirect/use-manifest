@@ -68,6 +68,25 @@ const setFilter = (state, action) => ({
   page: 0
 })
 
+const updateState = (state, action) => {
+  const updatedState = { ...state }
+
+  if (action.filter) {
+    updatedState.filter = action.filter
+    updatedState.page = 0
+  }
+  if (action.sorts && action.sorts.length) {
+    updatedState.sorts = action.sorts
+    updatedState.page = 0
+  }
+  if (action.pageSize) {
+    updatedState.pageSize = action.pageSize
+    updatedState.page = 0
+  }
+
+  return updatedState
+}
+
 const setError = (state, action) => ({
   ...state,
   error: action.error
@@ -84,6 +103,7 @@ export default (state, action) => {
     case actionTypes.SET_LOADING_ROWS: return setLoadingRows(state, action)
     case actionTypes.SET_FILTER: return setFilter(state, action)
     case actionTypes.SET_ERROR: return setError(state, action)
+    case actionTypes.UPDATE_STATE: return updateState(state, action)
     default: return state
   }
 }
