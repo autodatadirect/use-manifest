@@ -54,8 +54,18 @@ const useDetectChange = (name, value) => {
   return false
 }
 
-const Effects = ({ fetchRows, fetchCount }) => {
+const useIsFirstLoad = () => {
+  const ref = useRef()
+  if (!ref.current) {
+    ref.current = true
+    return true
+  }
+  return false
+}
+
+const Effects = ({ fetchRows, fetchCount, autoLoad = false }) => {
   const { page, pageSize, sorts, filter } = useManifest()
+  const isFirstLoad = useIsFirstLoad()
 
   const runFetchCount = useCountFetcher({ fetchCount })
   const runFetchRows = useRowFetcher({ fetchRows })
@@ -64,6 +74,8 @@ const Effects = ({ fetchRows, fetchCount }) => {
   const pageSizeChanged = useDetectChange('pageSize', pageSize)
   const sortsChanged = useDetectChange('sorts', sorts)
   const filterChanged = useDetectChange('filter', filter)
+
+  if (isFirstLoad && !autoLoad) return null
 
   if (pageChanged || pageSizeChanged || filterChanged) {
     runFetchRows(filter, { page, pageSize, sorts })
@@ -83,7 +95,7 @@ const DefaultChildren = () =>
     <DefaultControls />
   </>
 
-const Manifest = ({ children, fetchRows, fetchCount, definition }) => {
+const Manifest = ({ children, fetchRows, fetchCount, definition, autoLoad }) => {
   const state = useManifestState()
 
   const contextValue = {
@@ -93,7 +105,7 @@ const Manifest = ({ children, fetchRows, fetchCount, definition }) => {
 
   return (
     <manifestContext.Provider value={contextValue}>
-      <Effects fetchCount={fetchCount} fetchRows={fetchRows} />
+      <Effects fetchCount={fetchCount} fetchRows={fetchRows} autoLoad={autoLoad} />
       {children || <DefaultChildren />}
     </manifestContext.Provider>
   )
