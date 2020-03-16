@@ -18,7 +18,7 @@ export default () => {
       setLoadingCount: bindDispatch(dispatch, loadingCount => ({ type: types.SET_LOADING_COUNT, loadingCount })),
       setLoadingRows: bindDispatch(dispatch, loadingRows => ({ type: types.SET_LOADING_ROWS, loadingRows })),
       setFilter: bindDispatch(dispatch, filter => ({ type: types.SET_FILTER, filter })),
-      updateState: bindDispatch(dispatch, ({ filter, sorts, pageSize }) => ({ type: types.UPDATE_STATE, filter, sorts, pageSize })),
+      updateState: bindDispatch(dispatch, ({ filter, sorts, pageSize, page }) => ({ type: types.UPDATE_STATE, filter, sorts, pageSize, page })),
       resetState: bindDispatch(dispatch, () => ({ type: types.RESET })),
       setError: bindDispatch(dispatch, error => ({ type: types.SET_ERROR, error }))
     }

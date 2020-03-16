@@ -64,7 +64,7 @@ const useIsFirstLoad = () => {
 }
 
 const Effects = ({ fetchRows, fetchCount, autoLoad = false }) => {
-  const { page, pageSize, sorts, filter } = useManifest()
+  const { page, pageSize, sorts, filter, count } = useManifest()
   const isFirstLoad = useIsFirstLoad()
 
   const runFetchCount = useCountFetcher({ fetchCount })
@@ -79,7 +79,7 @@ const Effects = ({ fetchRows, fetchCount, autoLoad = false }) => {
 
   if (pageChanged || pageSizeChanged || filterChanged) {
     runFetchRows(filter, { page, pageSize, sorts })
-    if (!page || filterChanged) {
+    if (!page || filterChanged || count === null) {
       runFetchCount(filter, { page, pageSize, sorts })
     }
   } else if (sortsChanged) {
