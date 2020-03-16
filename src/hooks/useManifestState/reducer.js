@@ -83,6 +83,9 @@ const updateState = (state, action) => {
     updatedState.pageSize = action.pageSize
     updatedState.page = 0
   }
+  if (action.page || action.page === 0) {
+    updatedState.page = action.page
+  }
 
   return updatedState
 }
