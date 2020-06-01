@@ -1,4 +1,4 @@
-import React, { createContext, useRef, useCallback } from 'react'
+import React, { createContext, useRef, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import useManifest from '../hooks/useManifest'
 import useManifestState from '../hooks/useManifestState'
@@ -75,16 +75,18 @@ const Effects = ({ fetchRows, fetchCount, autoLoad = false }) => {
   const sortsChanged = useDetectChange('sorts', sorts)
   const filterChanged = useDetectChange('filter', filter)
 
-  if (isFirstLoad && !autoLoad) return null
+  useEffect(() => {
+    if (isFirstLoad && !autoLoad) return
 
-  if (pageChanged || pageSizeChanged || filterChanged) {
-    runFetchRows(filter, { page, pageSize, sorts })
-    if (!page || filterChanged || count === null) {
-      runFetchCount(filter, { page, pageSize, sorts })
+    if (pageChanged || pageSizeChanged || filterChanged) {
+      runFetchRows(filter, { page, pageSize, sorts })
+      if (!page || filterChanged || count === null) {
+        runFetchCount(filter, { page, pageSize, sorts })
+      }
+    } else if (sortsChanged) {
+      runFetchRows(filter, { page, pageSize, sorts })
     }
-  } else if (sortsChanged) {
-    runFetchRows(filter, { page, pageSize, sorts })
-  }
+  })
 
   return null
 }
