@@ -9,6 +9,7 @@ import DefaultControls from './components/DefaultControls'
 import DefaultControlsPageSizer from './components/DefaultControls/PageSizer'
 import DefaultControlsStatus from './components/DefaultControls/Status'
 import ButtonPager from './components/ButtonPager'
+import localFetcher from './utils/localFetcher'
 import { ASCENDING, DESCENDING, NOT_SORTED } from './constants/sortDirections'
 
 export {
@@ -25,5 +26,6 @@ export {
   ButtonPager,
   ASCENDING,
   DESCENDING,
-  NOT_SORTED
+  NOT_SORTED,
+  localFetcher
 }
