@@ -8,7 +8,7 @@
     "build": "babel ./src -d ./dist; cp ./src/index.css ./dist/index.css",
     "prepublish": "npm run build",
     "lint": "standard \"./src/**/*.js\" | snazzy",
-    "test": "jest ./src/* --watch",
+    "test": "jest ./src/*",
     "dev": "babel ./src -w -d ./dist"
   },
   "keywords": [
