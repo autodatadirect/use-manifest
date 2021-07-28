@@ -37,7 +37,7 @@ const useRowFetcher = ({ fetchRows }) => {
       try {
         const rows = await fetchRows(filter, { page, pageSize, sorts })
         if (id !== rowCallId) return
-        setRows(rows)
+        setRows(rows, pageSize)
       } catch (error) {
         setError(error)
       }
@@ -115,7 +115,7 @@ const Manifest = ({ children, fetchRows, fetchCount, definition, autoLoad }) => 
 
 Manifest.propTypes = {
   fetchRows: PropTypes.func.isRequired,
-  fetchCount: PropTypes.func.isRequired,
+  fetchCount: PropTypes.func,
   children: PropTypes.any,
   filter: PropTypes.any,
   definition: PropTypes.array.isRequired

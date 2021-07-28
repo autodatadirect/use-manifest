@@ -3,10 +3,21 @@ import PropTypes from 'prop-types'
 import usePager from '../hooks/usePager'
 
 const Pager = ({ className }) => {
-  const { page, pages, count, totalPages, loading } = usePager({ numberOfPages: 5 })
+  const { page, pages, count, totalPages, loading, hasNextPage } = usePager({ numberOfPages: 5 })
   const lastPage = totalPages - 1
 
+  if (!count) {
+    return (
+      <div className={`manifest-pager ${className || ''}`} aria-label='pager'>
+        {page > 0 ? <PagerButton page={0} loading={loading}>First</PagerButton> : null}
+        {page > 0 ? <PagerButton page={page - 1} loading={loading}>{'<'}</PagerButton> : null}
+        {hasNextPage ? <PagerButton page={page + 1} loading={loading}>{'>'}</PagerButton> : null}
+      </div>
+    )
+  }
+
   if (count < 1) return null
+
   return (
     <div className={`manifest-pager ${className || ''}`} aria-label='pager'>
       {page > 0 ? <PagerButton page={0} loading={loading}>First</PagerButton> : null}
