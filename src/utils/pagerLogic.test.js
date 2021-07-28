@@ -62,5 +62,3 @@ describe('pagerLogic', () => {
     })
   })
 })
-
-// const d = (numberOfPages, currentPage, pageSize, count)
