@@ -10,8 +10,7 @@ export const initialState = {
   count: null,
   rows: [],
   filter: null,
-  error: null,
-  hasNextPage: false
+  error: null
 }
 
 export const initialSort = {
@@ -55,8 +54,7 @@ const setSorts = (state, action) => ({
 
 const setRows = (state, action) => ({
   ...state,
-  rows: action.rows,
-  hasNextPage: action.rows ? action.rows.length === action.pageSize : false
+  rows: action.rows
 })
 
 const setCount = (state, action) => ({

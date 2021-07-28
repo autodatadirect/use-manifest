@@ -37,7 +37,7 @@ const useRowFetcher = ({ fetchRows }) => {
       try {
         const rows = await fetchRows(filter, { page, pageSize, sorts })
         if (id !== rowCallId) return
-        setRows(rows, pageSize)
+        setRows(rows)
       } catch (error) {
         setError(error)
       }
@@ -99,10 +99,24 @@ const DefaultChildren = () =>
 
 const Manifest = ({ children, fetchRows, fetchCount, definition, autoLoad }) => {
   const state = useManifestState()
+  const totalPages = Math.ceil(state.count / state.pageSize)
+
+  let showNext = state.count > (state.page + 1) * state.pageSize
+  let showLast = (state.page) < totalPages - 2
+
+  if (state.count === null) {
+    showNext = state.rows.length === state.pageSize
+    showLast = false
+  }
 
   const contextValue = {
     ...state,
-    definition
+    definition,
+    hasNextPage: showNext,
+    showFirst: state.page > 1,
+    showPrevious: state.page > 0,
+    showNext: showNext,
+    showLast: showNext && showLast
   }
 
   return (

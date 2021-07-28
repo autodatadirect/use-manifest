@@ -9,11 +9,12 @@ describe('pagerLogic', () => {
       expect(pagerLogic.determineTotalPages(20, 100)).toBe(5)
       expect(pagerLogic.determineTotalPages(20, 101)).toBe(6)
       expect(pagerLogic.determineTotalPages(10, 0)).toBe(0)
+      expect(pagerLogic.determineTotalPages(10, null)).toBe(null)
     })
   })
 
   describe('determinePages', () => {
-    const d = (numberOfPages, currentPage, pageSize, count) => ({ numberOfPages, currentPage, pageSize, count })
+    const d = (numberOfPages, currentPage, pageSize, count, hasNextPage = true) => ({ numberOfPages, currentPage, pageSize, count, hasNextPage })
 
     it('returns an array', () => {
       expect(typeof pagerLogic.determinePages(3, 0, 10, 100).map).toBeTruthy()
@@ -45,5 +46,21 @@ describe('pagerLogic', () => {
       expect(pagerLogic.determinePages(d(4, 1, 10, 100))).toEqual([0, 1, 2, 3])
       expect(pagerLogic.determinePages(d(4, 9, 10, 100))).toEqual([6, 7, 8, 9])
     })
+
+    it('shows one page forward when count is null', () => {
+      expect(pagerLogic.determinePages(d(5, 0, 10, null))).toEqual([0, 1])
+      expect(pagerLogic.determinePages(d(5, 1, 10, null))).toEqual([0, 1, 2])
+      expect(pagerLogic.determinePages(d(5, 200, 10, null))).toEqual([197, 198, 199, 200, 201])
+      expect(pagerLogic.determinePages(d(3, 0, 3, null))).toEqual([0, 1])
+      expect(pagerLogic.determinePages(d(3, 10, 3, null))).toEqual([9, 10, 11])
+    })
+
+    it('handles last page without count', () => {
+      expect(pagerLogic.determinePages(d(5, 10, 10, null, false))).toEqual([6, 7, 8, 9, 10])
+      expect(pagerLogic.determinePages(d(6, 2, 3, null, false))).toEqual([0, 1, 2])
+      expect(pagerLogic.determinePages(d(5, 0, 10, null, false))).toEqual([0])
+    })
   })
 })
+
+// const d = (numberOfPages, currentPage, pageSize, count)

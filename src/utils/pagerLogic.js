@@ -1,9 +1,26 @@
 
-export const determineTotalPages = (pageSize, count) => Math.floor(count / pageSize) + (count % pageSize ? 1 : 0)
+export const determineTotalPages = (pageSize, count) => {
+  if (count === null) return null
+  return Math.floor(count / pageSize) + (count % pageSize ? 1 : 0)
+}
 
-export const determinePages = ({ numberOfPages, currentPage, pageSize, count }) => {
+const determinePagesWithoutCount = ({ numberOfPages, currentPage, hasNextPage }) => {
+  const pages = []
+  const offset = hasNextPage ? 1 : 0
+  const firstPage = currentPage - numberOfPages + offset + 1
+  const nextPage = currentPage + offset
+  for (let i = firstPage; i <= nextPage; i++) {
+    if (i >= 0) {
+      pages.push(i)
+    }
+  }
+  return pages
+}
+
+const determinePagesWithCount = ({ numberOfPages, currentPage, pageSize, count }) => {
   const pages = []
   const totalPages = determineTotalPages(pageSize, count)
+
   let firstPage = currentPage - Math.floor((numberOfPages - 1) / 2)
   let lastPage = currentPage + Math.ceil((numberOfPages - 1) / 2)
 
@@ -26,4 +43,11 @@ export const determinePages = ({ numberOfPages, currentPage, pageSize, count }) 
   }
 
   return pages
+}
+
+export const determinePages = ({ numberOfPages, currentPage, pageSize, count, hasNextPage }) => {
+  if (count === null) {
+    return determinePagesWithoutCount({ numberOfPages, currentPage, hasNextPage })
+  }
+  return determinePagesWithCount({ numberOfPages, currentPage, pageSize, count })
 }
