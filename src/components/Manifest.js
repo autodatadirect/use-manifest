@@ -76,12 +76,12 @@ const Effects = ({ fetchRows, fetchCount, autoLoad = false }) => {
   const filterChanged = useDetectChange('filter', filter)
 
   useEffect(() => {
-    if (isFirstLoad && autoLoad) {
+    if (!autoLoad) return
+
+    if (isFirstLoad) {
       runFetchCount(filter, { page, pageSize, sorts })
       return
     }
-
-    if (!autoLoad) return
 
     if (pageChanged || pageSizeChanged || filterChanged || sortsChanged) {
       runFetchRows(filter, { page, pageSize, sorts })

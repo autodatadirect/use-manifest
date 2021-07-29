@@ -83,7 +83,7 @@ describe('pagerLogic', () => {
       expect(pagerLogic.showRelativePages(r(25, 10, 2, arr(10)))).toEqual(a(true, true, false, false))
     })
 
-    it('works when count is null, showNext is determined by rows.length, showLast will always be false', () => {
+    it('works when count is null, showNext is determined by rows.length and pageSize, showLast will always be false', () => {
       expect(pagerLogic.showRelativePages(r(null, 10, 1, arr(10)))).toEqual(a(false, true, true, false))
       expect(pagerLogic.showRelativePages(r(null, 10, 2, arr(9)))).toEqual(a(true, true, false, false))
       expect(pagerLogic.showRelativePages(r(null, 20, 8, arr(20)))).toEqual(a(true, true, true, false))

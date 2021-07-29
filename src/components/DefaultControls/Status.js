@@ -3,9 +3,11 @@ import propTypes from 'prop-types'
 import useStatus from '../../hooks/useStatus'
 
 const DEFAULT_STATUS_MESSAGE_GENERATOR = ({ count, lastOnPage, firstOnPage, loading }) => {
-  if (loading) return 'Loading ...'
-  if (count == null) return `Showing ${firstOnPage} to ${lastOnPage}`
-  return count < 1 ? 'No Results' : `Showing ${firstOnPage} to ${lastOnPage} of ${count}`
+  const counter = `Showing ${firstOnPage} to ${lastOnPage}`
+  if (loading && count === null) return 'Loading ...' // if loading and we don't have count yet
+  if (count === null) return counter
+  if (loading) return `${counter} of ${count}`
+  return count < 1 ? 'No Results' : `${counter} of ${count}`
 }
 
 const Status = ({ className, statusMessageGenerator = DEFAULT_STATUS_MESSAGE_GENERATOR }) => {

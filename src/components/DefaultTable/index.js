@@ -15,7 +15,6 @@ const computeClasses = ({ className = '', loadingRows }) => {
 const DefaultTable = ({ className, trPropsHandler = EMPTY_PROPS_HANDLER, tdPropsHandler = EMPTY_PROPS_HANDLER }) => {
   const { definition, rows, loadingRows } = useManifest()
   const finalClassName = computeClasses({ className, loadingRows })
-  console.log('****at the table****', rows.length)
   return (
     <Table className={finalClassName} columnCount={definition.length} rowCount={rows.length} trPropsHandler={trPropsHandler} tdPropsHandler={tdPropsHandler} />
   )

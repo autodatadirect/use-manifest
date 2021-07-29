@@ -46,7 +46,6 @@ const determinePagesWithCount = ({ numberOfPages, currentPage, pageSize, count }
 }
 
 export const determinePages = ({ numberOfPages, currentPage, pageSize, count, showNext, loadingRows }) => {
-  // if (loadingRows) currentPage = currentPage - 1
   if (count === null) {
     return determinePagesWithoutCount({ numberOfPages, currentPage, showNext })
   }
@@ -54,16 +53,12 @@ export const determinePages = ({ numberOfPages, currentPage, pageSize, count, sh
 }
 
 export const showRelativePages = ({ count, pageSize, page, rows }) => {
-  // expect(pagerLogic.showRelativePages(r(null, 80, 0, arr(80)))).toEqual(a(false, false, true, false))
   const totalPages = Math.ceil(count / pageSize)
 
   let showNext = (count > (page + 1) * pageSize)
-
-  // showNext = rows.length === pageSize
   let showLast = (page) < totalPages - 2
 
   if (count === null) {
-    console.log({ rows, pageSize }, rows.length === pageSize)
     showNext = rows.length === pageSize
     showLast = false
   }
