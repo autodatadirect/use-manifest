@@ -7,11 +7,11 @@ const DEFAULT_PAGE_SIZES = [10, 20, 50, 100, 200]
 const DEFAULT_TEXT_GENERATOR = size => `Show ${size} entries`
 
 const PageSizer = ({ className, pageSizes = DEFAULT_PAGE_SIZES, pageSizeLabelGenerator = DEFAULT_TEXT_GENERATOR }) => {
-  const { pageSize, setPageSize, rows } = useManifest()
+  const { pageSize, setPageSize } = useManifest()
 
   const handlePageSizeChange = useCallback(ev => {
     setPageSize(+ev.target.value)
-  }, [setPageSize, rows])
+  }, [setPageSize])
 
   return (
     <select className={className} value={pageSize} onChange={handlePageSizeChange}>

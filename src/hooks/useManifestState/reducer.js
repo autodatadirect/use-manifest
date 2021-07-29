@@ -38,8 +38,7 @@ const setPage = (state, action) => ({
 const setPageSize = (state, action) => ({
   ...state,
   pageSize: action.pageSize,
-  page: 0,
-  rowsLength: action.pageSize
+  page: 0
 })
 
 const setSorts = (state, action) => ({
