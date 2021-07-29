@@ -11,7 +11,7 @@ export default () => {
   if (!dispatchersRef.current) {
     dispatchersRef.current = {
       setPage: bindDispatch(dispatch, page => ({ type: types.SET_PAGE, page })),
-      setPageSize: bindDispatch(dispatch, pageSize => ({ type: types.SET_PAGE_SIZE, pageSize })),
+      setPageSize: bindDispatch(dispatch, (pageSize, rows) => ({ type: types.SET_PAGE_SIZE, pageSize, rows })),
       setSorts: bindDispatch(dispatch, (id, direction) => ({ type: types.SET_SORTS, id, direction })),
       setRows: bindDispatch(dispatch, rows => ({ type: types.SET_ROWS, rows })),
       setCount: bindDispatch(dispatch, count => ({ type: types.SET_COUNT, count })),

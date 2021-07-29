@@ -14,7 +14,7 @@ describe('pagerLogic', () => {
   })
 
   describe('determinePages', () => {
-    const d = (numberOfPages, currentPage, pageSize, count, hasNextPage = true) => ({ numberOfPages, currentPage, pageSize, count, hasNextPage })
+    const d = (numberOfPages, currentPage, pageSize, count, showNext = true) => ({ numberOfPages, currentPage, pageSize, count, showNext })
 
     it('returns an array', () => {
       expect(typeof pagerLogic.determinePages(3, 0, 10, 100).map).toBeTruthy()
@@ -59,6 +59,38 @@ describe('pagerLogic', () => {
       expect(pagerLogic.determinePages(d(5, 10, 10, null, false))).toEqual([6, 7, 8, 9, 10])
       expect(pagerLogic.determinePages(d(6, 2, 3, null, false))).toEqual([0, 1, 2])
       expect(pagerLogic.determinePages(d(5, 0, 10, null, false))).toEqual([0])
+    })
+  })
+
+  const r = (count, pageSize, page, rows) => ({ count, pageSize, page, rows })
+
+  const a = (showFirst, showPrevious, showNext, showLast) => ({ showFirst: showFirst, showLast: showLast, showNext: showNext, showPrevious: showPrevious })
+
+  const arr = size => {
+    const array = []
+    for (var i = 0; i < size; i++) {
+      array.push(i)
+    }
+    return array
+  }
+
+  describe('showRelativePages', () => {
+    it('determines which pages and actions to show when count is available', () => {
+      // if we have count rows don't matter FOR NOW, it will need to refer to notes
+      expect(pagerLogic.showRelativePages(r(100, 10, 10, arr(10)))).toEqual(a(true, true, false, false))
+      expect(pagerLogic.showRelativePages(r(100, 10, 0, arr(10)))).toEqual(a(false, false, true, true))
+      expect(pagerLogic.showRelativePages(r(25, 10, 1, arr(10)))).toEqual(a(false, true, true, false))
+      expect(pagerLogic.showRelativePages(r(25, 10, 2, arr(10)))).toEqual(a(true, true, false, false))
+    })
+
+    it('works when count is null, showNext is determined by rows.length, showLast will always be false', () => {
+      expect(pagerLogic.showRelativePages(r(null, 10, 1, arr(10)))).toEqual(a(false, true, true, false))
+      expect(pagerLogic.showRelativePages(r(null, 10, 2, arr(9)))).toEqual(a(true, true, false, false))
+      expect(pagerLogic.showRelativePages(r(null, 20, 8, arr(20)))).toEqual(a(true, true, true, false))
+      expect(pagerLogic.showRelativePages(r(null, 20, 8, arr(10)))).toEqual(a(true, true, false, false))
+      expect(pagerLogic.showRelativePages(r(null, 100, 0, arr(80)))).toEqual(a(false, false, false, false))
+      expect(pagerLogic.showRelativePages(r(null, 50, 0, arr(50)))).toEqual(a(false, false, true, false))
+      expect(pagerLogic.showRelativePages(r(null, 35, 0, arr(35)))).toEqual(a(false, false, true, false))
     })
   })
 })

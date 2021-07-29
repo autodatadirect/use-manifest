@@ -54,7 +54,7 @@ const useDetectChange = (name, value) => {
   return false
 }
 
-const useIsFirstLoad = () => {
+export const useIsFirstLoad = () => {
   const ref = useRef()
   if (!ref.current) {
     ref.current = true
@@ -64,7 +64,7 @@ const useIsFirstLoad = () => {
 }
 
 const Effects = ({ fetchRows, fetchCount, autoLoad = false }) => {
-  const { page, pageSize, sorts, filter, count } = useManifest()
+  const { page, pageSize, sorts, filter } = useManifest()
   const isFirstLoad = useIsFirstLoad()
 
   const runFetchCount = useCountFetcher({ fetchCount })
@@ -76,14 +76,14 @@ const Effects = ({ fetchRows, fetchCount, autoLoad = false }) => {
   const filterChanged = useDetectChange('filter', filter)
 
   useEffect(() => {
-    if (isFirstLoad && !autoLoad) return
+    if (isFirstLoad && autoLoad) {
+      runFetchCount(filter, { page, pageSize, sorts })
+      return
+    }
 
-    if (pageChanged || pageSizeChanged || filterChanged) {
-      runFetchRows(filter, { page, pageSize, sorts })
-      if (!page || filterChanged || count === null) {
-        runFetchCount(filter, { page, pageSize, sorts })
-      }
-    } else if (sortsChanged) {
+    if (!autoLoad) return
+
+    if (pageChanged || pageSizeChanged || filterChanged || sortsChanged) {
       runFetchRows(filter, { page, pageSize, sorts })
     }
   })
@@ -99,24 +99,11 @@ const DefaultChildren = () =>
 
 const Manifest = ({ children, fetchRows, fetchCount, definition, autoLoad }) => {
   const state = useManifestState()
-  const totalPages = Math.ceil(state.count / state.pageSize)
-
-  let showNext = state.count > (state.page + 1) * state.pageSize
-  let showLast = (state.page) < totalPages - 2
-
-  if (state.count === null) {
-    showNext = state.rows.length === state.pageSize
-    showLast = false
-  }
 
   const contextValue = {
     ...state,
-    definition,
-    hasNextPage: showNext,
-    showFirst: state.page > 1,
-    showPrevious: state.page > 0,
-    showNext: showNext,
-    showLast: showNext && showLast
+    fetchCount,
+    definition
   }
 
   return (

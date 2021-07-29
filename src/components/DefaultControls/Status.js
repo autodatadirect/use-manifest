@@ -4,7 +4,7 @@ import useStatus from '../../hooks/useStatus'
 
 const DEFAULT_STATUS_MESSAGE_GENERATOR = ({ count, lastOnPage, firstOnPage, loading }) => {
   if (loading) return 'Loading ...'
-  if (count == null) return null
+  if (count == null) return `Showing ${firstOnPage} to ${lastOnPage}`
   return count < 1 ? 'No Results' : `Showing ${firstOnPage} to ${lastOnPage} of ${count}`
 }
 

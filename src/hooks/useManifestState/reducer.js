@@ -10,7 +10,8 @@ export const initialState = {
   count: null,
   rows: [],
   filter: null,
-  error: null
+  error: null,
+  rowsLength: null
 }
 
 export const initialSort = {
@@ -30,14 +31,15 @@ const setLoadingRows = (state, action) => ({
 
 const setPage = (state, action) => ({
   ...state,
-  page: action.page,
-  count: action.page ? state.count : null
+  page: action.page
+  // count: action.page ? state.count : null
 })
 
 const setPageSize = (state, action) => ({
   ...state,
   pageSize: action.pageSize,
-  page: 0
+  page: 0,
+  rowsLength: action.pageSize
 })
 
 const setSorts = (state, action) => ({
@@ -52,9 +54,11 @@ const setSorts = (state, action) => ({
   page: 0
 })
 
-const setRows = (state, action) => ({
+const setRows = (state, action) => console.log('r', action.rows) || ({
   ...state,
-  rows: action.rows
+  rows: action.rows,
+  loadingRows: false,
+  rowsLength: action.rows.length
 })
 
 const setCount = (state, action) => ({
