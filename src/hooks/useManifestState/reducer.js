@@ -1,5 +1,6 @@
 import * as actionTypes from './actionTypes'
 import { ASCENDING } from '../../constants/sortDirections'
+import * as pagerLogic from '../../utils/pagerLogic'
 
 export const initialState = {
   loadingRows: false,
@@ -10,7 +11,8 @@ export const initialState = {
   count: null,
   rows: [],
   filter: null,
-  error: null
+  error: null,
+  rowsLength: null
 }
 
 export const initialSort = {
@@ -30,8 +32,7 @@ const setLoadingRows = (state, action) => ({
 
 const setPage = (state, action) => ({
   ...state,
-  page: action.page,
-  count: action.page ? state.count : null
+  page: action.page
 })
 
 const setPageSize = (state, action) => ({
@@ -52,10 +53,38 @@ const setSorts = (state, action) => ({
   page: 0
 })
 
-const setRows = (state, action) => ({
-  ...state,
-  rows: action.rows
-})
+const setRows = (state, action) => {
+  return correctRowCount({
+    ...state,
+    rows: action.rows,
+    loadingRows: false,
+    rowsLength: action.rows.length
+  })
+}
+
+export const correctRowCount = (state) => {
+  if (!onLastPage(state)) return state
+
+  let calculatedCount = state.page * state.pageSize + state.rows.length
+  if (state.count && state.count === calculatedCount) return state
+
+  if (state.pageSize === state.rows.length) {
+    calculatedCount = null
+  }
+
+  return {
+    ...state,
+    count: calculatedCount,
+    page: state.rows.length ? state.page : state.page - 1
+  }
+}
+
+const onLastPage = state => {
+  if (state.count === null) {
+    return state.rows.length < state.pageSize
+  }
+  return pagerLogic.determineTotalPages(state.pageSize, state.count) === state.page + 1
+}
 
 const setCount = (state, action) => ({
   ...state,
