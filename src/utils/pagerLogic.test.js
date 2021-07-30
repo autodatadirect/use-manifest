@@ -76,7 +76,6 @@ describe('pagerLogic', () => {
 
   describe('showRelativePages', () => {
     it('determines which pages and actions to show when count is available', () => {
-      // if we have count rows don't matter FOR NOW, it will need to refer to notes
       expect(pagerLogic.showRelativePages(r(100, 10, 10, arr(10)))).toEqual(a(true, true, false, false))
       expect(pagerLogic.showRelativePages(r(100, 10, 0, arr(10)))).toEqual(a(false, false, true, true))
       expect(pagerLogic.showRelativePages(r(25, 10, 1, arr(10)))).toEqual(a(false, true, true, false))
