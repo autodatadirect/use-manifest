@@ -94,7 +94,8 @@ const setCount = (state, action) => ({
 const setFilter = (state, action) => ({
   ...state,
   filter: action.filter,
-  page: 0
+  page: 0,
+  count: null
 })
 
 const updateState = (state, action) => {
@@ -115,6 +116,7 @@ const updateState = (state, action) => {
   if (action.page || action.page === 0) {
     updatedState.page = action.page
   }
+  updatedState.count = null
 
   return updatedState
 }
