@@ -22,7 +22,7 @@ const PageSizer = ({ className, pageSizes = DEFAULT_PAGE_SIZES, pageSizeLabelGen
 
 PageSizer.propTypes = {
   pageSizes: propTypes.arrayOf(propTypes.number),
-  pageSizeLableGenerator: propTypes.func,
+  pageSizeLabelGenerator: propTypes.func,
   className: propTypes.string
 }
 

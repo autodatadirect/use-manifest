@@ -4,16 +4,16 @@ import Pager from '../ButtonPager'
 import PageSizer from './PageSizer'
 import Status from './Status'
 
-const DefaultControls = ({ className, pageSizes, pageSizeLableGenerator, statusMessageGenerator }) =>
+const DefaultControls = ({ className, pageSizes, pageSizeLabelGenerator, statusMessageGenerator }) =>
   <div className={'manifest-controls' + (className ? ' ' + className : '')}>
-    <PageSizer pageSizes={pageSizes} pageSizeLableGenerator={pageSizeLableGenerator} />
+    <PageSizer pageSizes={pageSizes} pageSizeLabelGenerator={pageSizeLabelGenerator} />
     <Status statusMessageGenerator={statusMessageGenerator} />
     <Pager />
   </div>
 
 DefaultControls.propTypes = {
   className: PropTypes.string,
-  pageSizeLableGenerator: PropTypes.func,
+  pageSizeLabelGenerator: PropTypes.func,
   statusMessageGenerator: PropTypes.func
 }
 

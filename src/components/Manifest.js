@@ -45,7 +45,7 @@ const useRowFetcher = ({ fetchRows }) => {
     }, [setError, fetchRows, setLoadingRows, setRows])
 }
 
-const useDetectChange = (name, value) => {
+const useDetectChange = value => {
   const ref = useRef()
   if (ref.current !== value) {
     ref.current = value
@@ -70,21 +70,19 @@ const Effects = ({ fetchRows, fetchCount, autoLoad = false }) => {
   const runFetchCount = useCountFetcher({ fetchCount })
   const runFetchRows = useRowFetcher({ fetchRows })
 
-  const pageChanged = useDetectChange('page', page)
-  const pageSizeChanged = useDetectChange('pageSize', pageSize)
-  const sortsChanged = useDetectChange('sorts', sorts)
-  const filterChanged = useDetectChange('filter', filter)
+  const pageChanged = useDetectChange(page)
+  const pageSizeChanged = useDetectChange(pageSize)
+  const sortsChanged = useDetectChange(sorts)
+  const filterChanged = useDetectChange(filter)
 
   useEffect(() => {
     if (isFirstLoad && !autoLoad) return
 
-    if (pageChanged || pageSizeChanged || filterChanged) {
+    if (pageChanged || pageSizeChanged || filterChanged || sortsChanged) {
       runFetchRows(filter, { page, pageSize, sorts })
-      if (!page || filterChanged || count === null) {
-        runFetchCount(filter, { page, pageSize, sorts })
-      }
-    } else if (sortsChanged) {
-      runFetchRows(filter, { page, pageSize, sorts })
+    }
+    if (filterChanged && page === 0 && count === null && fetchCount) {
+      runFetchCount(filter, { page, pageSize, sorts })
     }
   })
 
@@ -115,7 +113,7 @@ const Manifest = ({ children, fetchRows, fetchCount, definition, autoLoad }) => 
 
 Manifest.propTypes = {
   fetchRows: PropTypes.func.isRequired,
-  fetchCount: PropTypes.func.isRequired,
+  fetchCount: PropTypes.func,
   children: PropTypes.any,
   filter: PropTypes.any,
   definition: PropTypes.array.isRequired
