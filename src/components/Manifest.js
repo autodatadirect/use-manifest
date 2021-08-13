@@ -54,7 +54,7 @@ const useDetectChange = value => {
   return false
 }
 
-const useIsFirstLoad = () => {
+export const useIsFirstLoad = () => {
   const ref = useRef()
   if (!ref.current) {
     ref.current = true
@@ -100,6 +100,7 @@ const Manifest = ({ children, fetchRows, fetchCount, definition, autoLoad }) => 
 
   const contextValue = {
     ...state,
+    fetchCount,
     definition
   }
 

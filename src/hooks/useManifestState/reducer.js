@@ -119,6 +119,7 @@ const updateState = (state, action) => {
   if (action.page || action.page === 0) {
     updatedState.page = action.page
   }
+  updatedState.count = null
 
   return updatedState
 }
