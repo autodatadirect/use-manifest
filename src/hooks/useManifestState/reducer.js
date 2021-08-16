@@ -102,6 +102,9 @@ const updateState = (state, action) => {
   const updatedState = { ...state }
 
   if (action.filter) {
+    if (action.filter !== updatedState.filter) {
+      updatedState.count = null
+    }
     updatedState.filter = action.filter
     updatedState.page = 0
   }

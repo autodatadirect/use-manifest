@@ -45,7 +45,7 @@ const useRowFetcher = ({ fetchRows }) => {
     }, [setError, fetchRows, setLoadingRows, setRows])
 }
 
-const useDetectChange = (name, value) => {
+const useDetectChange = value => {
   const ref = useRef()
   if (ref.current !== value) {
     ref.current = value
@@ -64,27 +64,25 @@ export const useIsFirstLoad = () => {
 }
 
 const Effects = ({ fetchRows, fetchCount, autoLoad = false }) => {
-  const { page, pageSize, sorts, filter } = useManifest()
+  const { page, pageSize, sorts, filter, count } = useManifest()
   const isFirstLoad = useIsFirstLoad()
 
   const runFetchCount = useCountFetcher({ fetchCount })
   const runFetchRows = useRowFetcher({ fetchRows })
 
-  const pageChanged = useDetectChange('page', page)
-  const pageSizeChanged = useDetectChange('pageSize', pageSize)
-  const sortsChanged = useDetectChange('sorts', sorts)
-  const filterChanged = useDetectChange('filter', filter)
+  const pageChanged = useDetectChange(page)
+  const pageSizeChanged = useDetectChange(pageSize)
+  const sortsChanged = useDetectChange(sorts)
+  const filterChanged = useDetectChange(filter)
 
   useEffect(() => {
-    if (!autoLoad) return
-
-    if (isFirstLoad) {
-      runFetchCount(filter, { page, pageSize, sorts })
-      return
-    }
+    if (isFirstLoad && !autoLoad) return
 
     if (pageChanged || pageSizeChanged || filterChanged || sortsChanged) {
       runFetchRows(filter, { page, pageSize, sorts })
+    }
+    if (filterChanged && page === 0 && count === null && fetchCount) {
+      runFetchCount(filter, { page, pageSize, sorts })
     }
   })
 
