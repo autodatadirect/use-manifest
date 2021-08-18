@@ -75,7 +75,7 @@ export const correctRowCount = (state) => {
   return {
     ...state,
     count: calculatedCount,
-    page: state.rows.length ? state.page : state.page - 1
+    page: state.rows.length ? state.page : Math.max(state.page - 1, 0)
   }
 }
 
