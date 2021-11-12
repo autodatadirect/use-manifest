@@ -102,7 +102,7 @@ const updateState = (state, action) => {
   const updatedState = { ...state }
 
   if (action.filter) {
-    if (action.filter !== updatedState.filter) {
+    if (JSON.stringify(action.filter) !== JSON.stringify(updatedState.filter)) {
       updatedState.count = null
     }
     updatedState.filter = action.filter
@@ -119,7 +119,6 @@ const updateState = (state, action) => {
   if (action.page || action.page === 0) {
     updatedState.page = action.page
   }
-  updatedState.count = null
 
   return updatedState
 }
