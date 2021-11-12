@@ -62,6 +62,8 @@ const setRows = (state, action) => {
   })
 }
 
+const decrementPage = page => page > 0 ? page - 1 : page
+
 export const correctRowCount = (state) => {
   if (!onLastPage(state)) return state
 
@@ -75,7 +77,7 @@ export const correctRowCount = (state) => {
   return {
     ...state,
     count: calculatedCount,
-    page: state.rows.length ? state.page : state.page - 1
+    page: state.rows.length ? state.page : decrementPage(state.page)
   }
 }
 
@@ -102,7 +104,7 @@ const updateState = (state, action) => {
   const updatedState = { ...state }
 
   if (action.filter) {
-    if (action.filter !== updatedState.filter) {
+    if (JSON.stringify(action.filter) !== JSON.stringify(updatedState.filter)) {
       updatedState.count = null
     }
     updatedState.filter = action.filter
@@ -119,7 +121,6 @@ const updateState = (state, action) => {
   if (action.page || action.page === 0) {
     updatedState.page = action.page
   }
-  updatedState.count = null
 
   return updatedState
 }
