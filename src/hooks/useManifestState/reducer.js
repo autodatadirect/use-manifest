@@ -62,8 +62,6 @@ const setRows = (state, action) => {
   })
 }
 
-const decrementPage = page => page > 0 ? page - 1 : page
-
 export const correctRowCount = (state) => {
   if (!onLastPage(state)) return state
 
@@ -77,7 +75,7 @@ export const correctRowCount = (state) => {
   return {
     ...state,
     count: calculatedCount,
-    page: state.rows.length ? state.page : decrementPage(state.page)
+    page: state.rows.length ? state.page : Math.max(state.page - 1, 0)
   }
 }
 
