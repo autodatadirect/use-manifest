@@ -102,11 +102,11 @@ const updateState = (state, action) => {
   const updatedState = { ...state }
 
   if (action.filter) {
-    if (JSON.stringify(action.filter) !== JSON.stringify(updatedState.filter)) {
+    if (action.filter !== updatedState.filter) {
       updatedState.count = null
+      updatedState.filter = action.filter
+      updatedState.page = 0
     }
-    updatedState.filter = action.filter
-    updatedState.page = 0
   }
   if (action.sorts && action.sorts.length) {
     updatedState.sorts = action.sorts
