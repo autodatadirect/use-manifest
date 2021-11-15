@@ -65,8 +65,8 @@ const setRows = (state, action) => {
 export const correctRowCount = (state) => {
   if (!onLastPage(state)) return state
 
-  let calculatedCount = state.page * state.pageSize + state.rows.length
-  if (state.count && state.count === calculatedCount) return state
+  let calculatedCount = (state.page * state.pageSize) + state.rows.length
+  if (state.rows.length && state.count && state.count === calculatedCount) return state
 
   if (state.pageSize === state.rows.length) {
     calculatedCount = null
@@ -83,7 +83,7 @@ const onLastPage = state => {
   if (state.count === null) {
     return state.rows.length < state.pageSize
   }
-  return pagerLogic.determineTotalPages(state.pageSize, state.count) === state.page + 1
+  return pagerLogic.determineTotalPages(state.pageSize, state.count) <= (state.page + 1)
 }
 
 const setCount = (state, action) => ({
