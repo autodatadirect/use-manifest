@@ -81,7 +81,7 @@ const Effects = ({ fetchRows, fetchCount, autoLoad = false }) => {
     if (pageChanged || pageSizeChanged || filterChanged || sortsChanged) {
       runFetchRows(filter, { page, pageSize, sorts })
     }
-    if (filterChanged && page === 0 && count === null && fetchCount) {
+    if (filterChanged && count === null && fetchCount) {
       runFetchCount(filter, { page, pageSize, sorts })
     }
   })

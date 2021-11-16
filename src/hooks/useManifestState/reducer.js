@@ -65,8 +65,8 @@ const setRows = (state, action) => {
 export const correctRowCount = (state) => {
   if (!onLastPage(state)) return state
 
-  let calculatedCount = state.page * state.pageSize + state.rows.length
-  if (state.count && state.count === calculatedCount) return state
+  let calculatedCount = (state.page * state.pageSize) + state.rows.length
+  if (state.rows.length && state.count && state.count === calculatedCount) return state
 
   if (state.pageSize === state.rows.length) {
     calculatedCount = null
@@ -75,7 +75,7 @@ export const correctRowCount = (state) => {
   return {
     ...state,
     count: calculatedCount,
-    page: state.rows.length ? state.page : Math.max(state.page - 1, 0)
+    page: state.page
   }
 }
 
@@ -83,7 +83,7 @@ const onLastPage = state => {
   if (state.count === null) {
     return state.rows.length < state.pageSize
   }
-  return pagerLogic.determineTotalPages(state.pageSize, state.count) === state.page + 1
+  return pagerLogic.determineTotalPages(state.pageSize, state.count) <= (state.page + 1)
 }
 
 const setCount = (state, action) => ({
@@ -104,9 +104,9 @@ const updateState = (state, action) => {
   if (action.filter) {
     if (action.filter !== updatedState.filter) {
       updatedState.count = null
+      updatedState.filter = action.filter
+      updatedState.page = 0
     }
-    updatedState.filter = action.filter
-    updatedState.page = 0
   }
   if (action.sorts && action.sorts.length) {
     updatedState.sorts = action.sorts
@@ -119,7 +119,6 @@ const updateState = (state, action) => {
   if (action.page || action.page === 0) {
     updatedState.page = action.page
   }
-  updatedState.count = null
 
   return updatedState
 }
