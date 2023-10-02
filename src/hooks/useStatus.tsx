@@ -1,17 +1,17 @@
 import useManifest from './useManifest'
 
-const determineFirstOnPage = (page, pageSize) => Math.max(page * pageSize, 0)
+const determineFirstOnPage = (page: number, pageSize: number) => Math.max(page * pageSize, 0)
 
-const determineLastOnPage = (page, pageSize, count) => Math.min(determineFirstOnPage(page + 1, pageSize), count)
+const determineLastOnPage = (page: number, pageSize: number, count: number) => Math.min(determineFirstOnPage(page + 1, pageSize), count)
 
-const determineLastOnPageWithoutCount = (page, pageSize) => (page + 1) * pageSize
+const determineLastOnPageWithoutCount = (page: number, pageSize: number) => (page + 1) * pageSize
 
 export default () => {
   const { page, pageSize, count, loadingCount, loadingRows } = useManifest()
 
   const firstOnPage = determineFirstOnPage(page, pageSize) + 1
-  let lastOnPage
 
+  let lastOnPage
   if (count === null) {
     lastOnPage = determineLastOnPageWithoutCount(page, pageSize)
   } else {
@@ -19,6 +19,7 @@ export default () => {
   }
 
   const loading = loadingRows || loadingCount
+
   return {
     page,
     pageSize,

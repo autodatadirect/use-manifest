@@ -1,9 +1,9 @@
 import React from 'react'
-import useManifest from '../hooks/useManifest'
+import useManifest, {ManifestContext} from '../hooks/useManifest'
 
 export default () => {
   const state = useManifest()
-  const displayState = { ...state }
+  const displayState: Partial<ManifestContext> = { ...state }
   delete displayState.rows
   delete displayState.definition
   return (

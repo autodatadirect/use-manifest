@@ -1,9 +1,10 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import useHeaderCell from '../hooks/useHeaderCell'
-import { ASCENDING, DESCENDING } from '../constants/sortDirections'
+import { Sort} from "../hooks/useManifest"
+import {ASCENDING, DESCENDING} from '../constants/sortDirections'
 
-const SimpleHeader = ({ columnIndex }) => {
+const SimpleHeader = ({ columnIndex }: { columnIndex: number }) => {
   const { setSortDirection, label, sortDirection, sortable } = useHeaderCell(columnIndex)
 
   const handleSort = useCallback(() => {
@@ -25,7 +26,7 @@ SimpleHeader.propTypes = {
   columnIndex: PropTypes.number.isRequired
 }
 
-const sortClass = ({ sortable, sortDirection }) => {
+const sortClass = ({ sortable, sortDirection }: { sortable: boolean, sortDirection: Sort['direction'] }) => {
   const classes = []
 
   if (sortable) {

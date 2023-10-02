@@ -1,7 +1,7 @@
 import useManifest from './useManifest'
 import * as pagerLogic from '../utils/pagerLogic'
 
-export default ({ numberOfPages }) => {
+export default ({ numberOfPages }: { numberOfPages?: number }) => {
   const { loadingRows, page, pageSize, count, setPage, setPageSize, rows } = useManifest()
   const { showFirst, showPrevious, showNext, showLast } = pagerLogic.showRelativePages({ count, pageSize, page, rows })
 

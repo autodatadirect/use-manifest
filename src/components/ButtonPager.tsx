@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import usePager from '../hooks/usePager'
 
-const Pager = ({ className }) => {
+const Pager = ({ className }: { className?: string }) => {
   const { page, pages, count, pageSize, loading, showFirst, showPrevious, showNext, showLast } = usePager({ numberOfPages: 5 })
   const lastPage = Math.ceil(count / pageSize) - 1
 
@@ -23,7 +23,14 @@ Pager.propTypes = {
   className: PropTypes.string
 }
 
-const PagerButton = ({ page, loading, isCurrentPage, children }) => {
+interface PagerButtonProps {
+  page: number
+  loading: boolean
+  isCurrentPage?: boolean
+  children: React.ReactNode
+}
+
+const PagerButton = ({ page, loading, isCurrentPage, children }: PagerButtonProps) => {
   const { setPage } = usePager({})
   const handleClick = useCallback(() => setPage(page), [page])
 
@@ -34,13 +41,6 @@ const PagerButton = ({ page, loading, isCurrentPage, children }) => {
       {children}
     </button>
   )
-}
-
-PagerButton.propTypes = {
-  loading: PropTypes.bool.isRequired,
-  page: PropTypes.number.isRequired,
-  children: PropTypes.any.isRequired,
-  isCurrentPage: PropTypes.bool
 }
 
 export default Pager
