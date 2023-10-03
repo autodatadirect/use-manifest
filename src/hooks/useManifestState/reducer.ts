@@ -35,22 +35,22 @@ export const initialSort = {
   direction: ASCENDING
 }
 
-const setLoadingCount = (state: State, action: any) => ({
+const setLoadingCount = (state: State, action: any): State => ({
   ...state,
   loadingCount: action.loadingCount
 })
 
-const setLoadingRows = (state: State, action: any) => ({
+const setLoadingRows = (state: State, action: any): State => ({
   ...state,
   loadingRows: action.loadingRows
 })
 
-const setPage = (state: State, action: any) => ({
+const setPage = (state: State, action: any): State => ({
   ...state,
   page: action.page
 })
 
-const setPageSize = (state: State, action: any) => ({
+const setPageSize = (state: State, action: any): State => ({
   ...state,
   pageSize: action.pageSize,
   page: 0
@@ -83,7 +83,7 @@ export const correctRowCount = function<T extends CorrectRowCountState>(state: T
   if (!onLastPage(state)) return state
 
   let calculatedCount: number | null = (state.page * state.pageSize) + state.rows.length
-  if ((state.rows.length > 0) && state.count && state.count === calculatedCount) return state
+  if ((state.rows.length > 0) && state.count != null && state.count === calculatedCount) return state
 
   if (state.pageSize === state.rows.length) {
     calculatedCount = null
@@ -96,51 +96,51 @@ export const correctRowCount = function<T extends CorrectRowCountState>(state: T
   }
 }
 
-const onLastPage = (state: CorrectRowCountState) => {
+const onLastPage = (state: CorrectRowCountState): boolean => {
   if (state.count === null) {
     return (state.rows?.length) < state.pageSize
   }
-  return pagerLogic.determineTotalPages(state.pageSize, state.count) || (state.page + 1) >= 0
+  return pagerLogic.determineTotalPages(state.pageSize, state.count) <= (state.page + 1)
 }
 
-const setCount = (state: State, action: any) => ({
+const setCount = (state: State, action: any): State => ({
   ...state,
   count: action.count
 })
 
-const setFilter = (state: State, action: any) => ({
+const setFilter = (state: State, action: any): State => ({
   ...state,
   filter: action.filter,
   page: 0,
   count: null
 })
 
-const updateState = (state: State, action: any) => {
+const updateState = (state: State, action: any): State => {
   const updatedState = { ...state }
 
-  if (action.filter) {
+  if (action.filter == null) {
     if (action.filter !== updatedState.filter) {
       updatedState.count = null
       updatedState.filter = action.filter
       updatedState.page = 0
     }
   }
-  if (action.sorts && action.sorts.length) {
+  if (action.sorts?.length > 0) {
     updatedState.sorts = action.sorts
     updatedState.page = 0
   }
-  if (action.pageSize) {
+  if (action.pageSize > 0) {
     updatedState.pageSize = action.pageSize
     updatedState.page = 0
   }
-  if (action.page || action.page === 0) {
+  if (action.page >= 0) {
     updatedState.page = action.page
   }
 
   return updatedState
 }
 
-const setError = (state: State, action: any) => ({
+const setError = (state: State, action: any): State => ({
   ...state,
   error: action.error
 })

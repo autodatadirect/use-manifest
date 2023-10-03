@@ -8,6 +8,7 @@
     "build": "babel ./src -d ./dist --extensions '.ts,.tsx,.js,.jsx' && tsc && cp ./src/index.css ./dist/index.css",
     "prepublish": "npm run build",
     "lint": "ts-standard | snazzy",
+    "lint2": "eslint ./src | snazzy",
     "test": "jest ./src/* --watch",
     "dev": "babel ./src -w -d ./dist"
   },
@@ -41,9 +42,10 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "standard": {
-    "env": [
-      "jest"
+  "ts-standard": {
+    "ignore": [
+      "dist",
+      "src/**.test.ts"
     ]
   },
   "dependencies": {

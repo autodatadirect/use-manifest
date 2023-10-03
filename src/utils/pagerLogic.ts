@@ -1,9 +1,9 @@
 export const determineTotalPages = (pageSize: number, count: number | null): number | null => {
   if (count === null) return null
-  return Math.floor(count / pageSize) + (count % pageSize ? 1 : 0)
+  return Math.floor(count / pageSize) + (count % ((pageSize === 0) ? 1 : 0))
 }
 
-const determinePagesWithoutCount = (numberOfPages: number, currentPage: number, showNext: boolean) => {
+const determinePagesWithoutCount = (numberOfPages: number, currentPage: number, showNext: boolean): number[] => {
   const pages: number[] = []
   const offset = showNext ? 1 : 0
   const firstPage = currentPage - numberOfPages + offset + 1
@@ -16,7 +16,7 @@ const determinePagesWithoutCount = (numberOfPages: number, currentPage: number, 
   return pages
 }
 
-const determinePagesWithCount = (numberOfPages: number, currentPage: number, pageSize: number, count: number) => {
+const determinePagesWithCount = (numberOfPages: number, currentPage: number, pageSize: number, count: number): number[] => {
   const pages: number[] = []
   const totalPages = determineTotalPages(pageSize, count) as number
 
@@ -52,21 +52,26 @@ export interface DeterminePagesProps {
   showNext: boolean
 }
 
-export const determinePages = ({ numberOfPages, currentPage, pageSize, count, showNext }: DeterminePagesProps) => {
+export const determinePages = ({ numberOfPages, currentPage, pageSize, count, showNext }: DeterminePagesProps): number[] => {
   if (count === null) {
     return determinePagesWithoutCount(numberOfPages, currentPage, showNext)
   }
   return determinePagesWithCount(numberOfPages, currentPage, pageSize, count)
 }
 
-export interface ShowRelativePagesProps {
+type ShowRelativePages = (props: {
   count: number | null
   pageSize: number
   page: number
   rows: any[]
+}) => {
+  showLast: boolean
+  showFirst: boolean
+  showNext: any
+  showPrevious: boolean
 }
 
-export const showRelativePages = ({ count, pageSize, page, rows }: ShowRelativePagesProps) => {
+export const showRelativePages: ShowRelativePages = ({ count, pageSize, page, rows }) => {
   let showNext
   let showLast
 

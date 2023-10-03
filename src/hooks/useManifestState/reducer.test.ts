@@ -7,7 +7,7 @@ const is = {
   count: null
 }
 
-const makeArraySize = (n: number) => {
+const makeArraySize = (n: number): number[] => {
   const arr: number[] = []
   for (let i = 0; i < n; i++) {
     arr.push(i)
@@ -15,13 +15,13 @@ const makeArraySize = (n: number) => {
   return arr
 }
 
-const test = (rowsLength: number, pageIndex: number, pageSize: number, count: null | number) => {
+const test = (rowsLength: number, pageIndex: number, pageSize: number, count: null | number): number | null => {
   const state = correctRowCount({
     ...is,
-    rows: rowsLength ? makeArraySize(rowsLength) : [],
-    page: pageIndex || is.page,
-    pageSize: pageSize || is.pageSize,
-    count: count || is.count
+    rows: makeArraySize(rowsLength),
+    page: pageIndex !== 0 ? pageIndex : is.page,
+    pageSize: pageSize !== 0 ? pageSize : is.pageSize,
+    count: (count != null && count !== 0) ? count : is.count
   })
   return state.count
 }

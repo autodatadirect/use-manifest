@@ -1,7 +1,17 @@
-import useManifest from './useManifest'
+import useManifest, { Sort } from './useManifest'
 import get from '../utils/get'
+import { Definition } from '../components/Manifest'
 
-export default function<Row>({ columnIndex, rowIndex }: { columnIndex: number, rowIndex: number }) {
+export interface UseCellReturn<Row> extends Definition {
+  def: Definition
+  sorts: Sort[]
+  row: Row
+  value: any
+  setSorts: (id: Definition['id'], direction: Sort['direction']) => void
+  loading: boolean
+}
+
+export default function<Row>({ columnIndex, rowIndex }: { columnIndex: number, rowIndex: number }): UseCellReturn<Row> {
   const { definition, rows, sorts, setSorts, loading } = useManifest<unknown, Row>()
   const def = definition[columnIndex]
   const row = rows[rowIndex]

@@ -3,7 +3,7 @@ import { Definition, manifestContext } from '../components/Manifest'
 import { ASCENDING, DESCENDING, NOT_SORTED } from '../constants/sortDirections'
 
 export interface Sort {
-  id: string
+  id?: string
   direction: typeof ASCENDING | typeof DESCENDING | typeof NOT_SORTED
 }
 
@@ -18,7 +18,7 @@ export interface ManifestContext<Filter, Row> {
   setLoadingRows: (loading: boolean) => void
   loadingRows: boolean
 
-  definition: [Definition]
+  definition: Definition[]
 
   setError: (error: any) => void
 
@@ -26,7 +26,7 @@ export interface ManifestContext<Filter, Row> {
   setPageSize: (pageSize: number) => void
 
   setSorts: (id: Definition['id'], direction: Sort['direction']) => void
-  sorts: [Sort]
+  sorts: Sort[]
 
   loading: boolean
 

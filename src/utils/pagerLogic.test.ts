@@ -14,7 +14,13 @@ describe('pagerLogic', () => {
   })
 
   describe('determinePages', () => {
-    const d = (numberOfPages: number, currentPage: number, pageSize: number, count: number | null, showNext = true) => ({ numberOfPages, currentPage, pageSize, count, showNext })
+    const d = (numberOfPages: number, currentPage: number, pageSize: number, count: number | null, showNext = true): {
+      numberOfPages: number
+      count: number | null
+      pageSize: number
+      showNext: boolean
+      currentPage: number
+    } => ({ numberOfPages, currentPage, pageSize, count, showNext })
 
     it('returns an array', () => {
       expect(Array.isArray(pagerLogic.determinePages(d(3, 0, 10, 100)))).toBeTruthy()
@@ -62,11 +68,21 @@ describe('pagerLogic', () => {
     })
   })
 
-  const r = (count: number | null, pageSize: number, page: number, rows: any[]) => ({ count, pageSize, page, rows })
+  const r = (count: number | null, pageSize: number, page: number, rows: any[]): {
+    count: number | null
+    pageSize: number
+    page: number
+    rows: any[]
+  } => ({ count, pageSize, page, rows })
 
-  const a = (showFirst: boolean, showPrevious: boolean, showNext: boolean, showLast: boolean) => ({ showFirst, showLast, showNext, showPrevious })
+  const a = (showFirst: boolean, showPrevious: boolean, showNext: boolean, showLast: boolean): {
+    showLast: boolean
+    showFirst: boolean
+    showNext: boolean
+    showPrevious: boolean
+  } => ({ showFirst, showLast, showNext, showPrevious })
 
-  const arr = (size: number) => {
+  const arr = (size: number): number[] => {
     const array: number[] = []
     for (let i = 0; i < size; i++) {
       array.push(i)

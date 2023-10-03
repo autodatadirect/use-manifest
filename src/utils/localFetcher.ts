@@ -2,21 +2,21 @@ import { State } from '../hooks/useManifestState/reducer'
 
 type Sorter = (a: any, b: any) => number
 
-const reverse = (sorter: Sorter) => (a: any, b: any) => {
+const reverse = (sorter: Sorter) => (a: any, b: any): number => {
   const res = sorter(a, b)
   if (res < 0) return 1
   if (res > 0) return -1
   return 0
 }
 
-const sorter = (tableState: Partial<State> = {}) => {
+const sorter = (tableState: Partial<State> = {}): Sorter => {
   let { sorts } = tableState
   sorts ??= []
 
   if (sorts.length === 0) return
 
   const sort = sorts[0]
-  if (!sort || !sort.id) return
+  if (sort?.id == null || sort.id === '') return
 
   if (sort.direction === 'DESCENDING') {
     return reverse(fieldSorter(sort.id))
@@ -25,7 +25,9 @@ const sorter = (tableState: Partial<State> = {}) => {
   }
 }
 
-const paginate = ({ page = 0, pageSize = 10 } = {}, rows: any[] | undefined = undefined) => rows?.slice(page * pageSize, page * pageSize + pageSize)
+const paginate = ({ page = 0, pageSize = 10 } = {}, rows: any[] | undefined = undefined): any[] | undefined => {
+  return rows?.slice(page * pageSize, page * pageSize + pageSize)
+}
 
 const fieldSorter = (id: string) => (a: [index: string], b: [index: string]) => {
   let nameA: any = (a as any)[id]
@@ -44,20 +46,23 @@ const fieldSorter = (id: string) => (a: [index: string], b: [index: string]) => 
   return 0
 }
 
-const KEEP_ALL = () => true
+const KEEP_ALL = (): boolean => true
 
 type DataFilter = (...args: any) => boolean
 type TableViewState = any
 
-export default (data: any[], filterer: DataFilter = KEEP_ALL) => {
-  const preprocess = (filter: DataFilter, tableViewState: TableViewState) => data.filter(filterer).sort(sorter(tableViewState))
+export default (data: any[], filterer: DataFilter = KEEP_ALL): {
+  fetchCount: (filter: DataFilter, tableViewState: TableViewState) => Promise<number>
+  fetchRows: (filter: DataFilter, tableViewState: TableViewState) => Promise<any[] | undefined>
+} => {
+  const preprocess = (filter: DataFilter, tableViewState: TableViewState): any[] => data.filter(filterer).sort(sorter(tableViewState))
 
-  const fetchRows = async (filter: DataFilter, tableViewState: TableViewState) => {
+  const fetchRows = async (filter: DataFilter, tableViewState: TableViewState): Promise<any[] | undefined> => {
     const all = preprocess(filter, tableViewState)
     return paginate(tableViewState, all)
   }
 
-  const fetchCount = async (filter: DataFilter, tableViewState: TableViewState) => {
+  const fetchCount = async (filter: DataFilter, tableViewState: TableViewState): Promise<number> => {
     return preprocess(filter, tableViewState).length
   }
 
