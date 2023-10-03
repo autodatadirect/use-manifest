@@ -1,12 +1,12 @@
 import { useReducer, useRef } from 'react'
-import reducer, { initialState } from './reducer'
+import reducer, {initialState, State} from './reducer'
 import * as types from './actionTypes'
 
 const bindDispatch = (dispatch, actionCreator) => (...args) => dispatch(actionCreator(...args))
 
-export default () => {
-  const [state, dispatch] = useReducer(reducer, initialState)
-  const dispatchersRef = useRef()
+export default (): State => {
+  const [state, dispatch] = useReducer(reducer, initialState, undefined)
+  const dispatchersRef = useRef<State>()
 
   if (!dispatchersRef.current) {
     dispatchersRef.current = {
@@ -21,7 +21,7 @@ export default () => {
       updateState: bindDispatch(dispatch, ({ filter, sorts, pageSize, page }) => ({ type: types.UPDATE_STATE, filter, sorts, pageSize, page })),
       resetState: bindDispatch(dispatch, () => ({ type: types.RESET })),
       setError: bindDispatch(dispatch, error => ({ type: types.SET_ERROR, error }))
-    }
+    } as State
   }
 
   return {

@@ -1,6 +1,7 @@
 import * as actionTypes from './actionTypes'
 import { ASCENDING } from '../../constants/sortDirections'
 import * as pagerLogic from '../../utils/pagerLogic'
+import {Reducer, ReducerWithoutAction} from "react";
 
 export const initialState = {
   loadingRows: false,
@@ -14,6 +15,8 @@ export const initialState = {
   error: null,
   rowsLength: null
 }
+
+export type State = Partial<typeof initialState>
 
 export const initialSort = {
   id: '',
@@ -128,7 +131,7 @@ const setError = (state, action) => ({
   error: action.error
 })
 
-export default (state, action) => {
+const reducer: Reducer<State, any> = (state, action): State => {
   switch (action.type) {
     case actionTypes.SET_PAGE: return setPage(state, action)
     case actionTypes.SET_PAGE_SIZE: return setPageSize(state, action)
@@ -143,3 +146,5 @@ export default (state, action) => {
     default: return state
   }
 }
+
+export default reducer

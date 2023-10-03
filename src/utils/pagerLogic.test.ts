@@ -14,10 +14,10 @@ describe('pagerLogic', () => {
   })
 
   describe('determinePages', () => {
-    const d = (numberOfPages, currentPage, pageSize, count, showNext = true) => ({ numberOfPages, currentPage, pageSize, count, showNext })
+    const d = (numberOfPages: number, currentPage: number, pageSize: number, count: number | null, showNext = true) => ({ numberOfPages, currentPage, pageSize, count, showNext })
 
     it('returns an array', () => {
-      expect(typeof pagerLogic.determinePages(3, 0, 10, 100).map).toBeTruthy()
+      expect(Array.isArray(pagerLogic.determinePages(d(3, 0, 10, 100)))).toBeTruthy()
     })
     it('with length = numberOfPages if numberOfPages < total pages', () => {
       expect(pagerLogic.determinePages(d(3, 0, 10, 100)).length).toBe(3)
@@ -62,11 +62,11 @@ describe('pagerLogic', () => {
     })
   })
 
-  const r = (count, pageSize, page, rows) => ({ count, pageSize, page, rows })
+  const r = (count: number | null, pageSize: number, page: number, rows: any[]) => ({ count, pageSize, page, rows })
 
-  const a = (showFirst, showPrevious, showNext, showLast) => ({ showFirst: showFirst, showLast: showLast, showNext: showNext, showPrevious: showPrevious })
+  const a = (showFirst: boolean, showPrevious: boolean, showNext: boolean, showLast: boolean) => ({ showFirst, showLast, showNext, showPrevious })
 
-  const arr = size => {
+  const arr = (size: number) => {
     const array = []
     for (var i = 0; i < size; i++) {
       array.push(i)

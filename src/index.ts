@@ -12,6 +12,8 @@ import ButtonPager from './components/ButtonPager'
 import localFetcher from './utils/localFetcher'
 import { ASCENDING, DESCENDING, NOT_SORTED } from './constants/sortDirections'
 
+export type * from './components/Manifest'
+
 export {
   useManifest,
   useCell,

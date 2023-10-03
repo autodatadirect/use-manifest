@@ -8,10 +8,10 @@ import SimpleHeader from "./DefaultHeader";
 
 export type Definition = {
   id: string
-  label: React.ReactNode
-  sortable: boolean
+  label?: React.ReactNode
+  sortable?: boolean
   cellComponent: typeof Cell
-  headerComponent: typeof SimpleHeader
+  headerComponent?: typeof SimpleHeader
 }
 
 export type CountFetcher<Filter> = {
@@ -28,7 +28,7 @@ export type RowFetcher<Filter, Row> = {
     (filter: Filter, props: RowFetcherProps): Promise<Row[]>
 }
 
-export const manifestContext: React.Context<ManifestContext> = createContext(null)
+export const manifestContext: React.Context<ManifestContext<any, any>> = createContext(null)
 
 let rowCallId = 0
 let countCallId = 0
@@ -128,7 +128,7 @@ const DefaultChildren = () =>
   </>
 
 export type ManifestProps<Filter, Row> = {
-    children: React.ReactNode
+    children?: React.ReactNode | null
     fetchRows: RowFetcher<Filter, Row>
     fetchCount: CountFetcher<Filter>
     definition: Definition[]
@@ -145,7 +145,7 @@ function Manifest<Filter, Row>({children, fetchRows, fetchCount, definition, aut
   }
 
   return (
-    <manifestContext.Provider value={contextValue}>
+    <manifestContext.Provider value={contextValue as any}>
       <Effects fetchCount={fetchCount} fetchRows={fetchRows} autoLoad={autoLoad}/>
       {children || <DefaultChildren/>}
     </manifestContext.Provider>

@@ -70,7 +70,7 @@ export interface TableRowProps<Row> {
 }
 
 function TableRow<Row>({rowIndex, columnIndexes, trPropsHandler, tdPropsHandler}: TableRowProps<Row>) {
-  const state = useManifest()
+  const state = useManifest<unknown, Row>()
   const row = state.rows[rowIndex]
   const props = trPropsHandler({rowIndex, row}) || EMPTY_PROPS
   return (
@@ -99,7 +99,7 @@ export interface TableDataProps<Row> {
 }
 
 function TableData<Row>({rowIndex, columnIndex, tdPropsHandler}: TableDataProps<Row>) {
-  const {row, id, label, value, def, sorts} = useCell({rowIndex, columnIndex})
+  const {row, id, label, value, def, sorts} = useCell<Row>({rowIndex, columnIndex})
   const props = tdPropsHandler({rowIndex, columnIndex, row, id, label, value, def, sorts}) || EMPTY_PROPS
   return (
     <td {...props} key={columnIndex + '.' + rowIndex}>

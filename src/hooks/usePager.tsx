@@ -5,7 +5,7 @@ export default ({ numberOfPages }: { numberOfPages?: number }) => {
   const { loadingRows, page, pageSize, count, setPage, setPageSize, rows } = useManifest()
   const { showFirst, showPrevious, showNext, showLast } = pagerLogic.showRelativePages({ count, pageSize, page, rows })
 
-  const pages = pagerLogic.determinePages({ numberOfPages, currentPage: page, pageSize, count, showNext, loadingRows })
+  const pages = pagerLogic.determinePages({ numberOfPages, currentPage: page, pageSize, count, showNext })
   const totalPages = pagerLogic.determineTotalPages(pageSize, count)
 
   return {

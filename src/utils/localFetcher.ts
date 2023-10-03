@@ -1,11 +1,15 @@
-const reverse = sorter => (a, b) => {
+interface Sorter {
+  (a: any, b: any): number
+}
+
+const reverse = (sorter: Sorter) => (a: any, b: any) => {
   const res = sorter(a, b)
   if (res < 0) return 1
   if (res > 0) return -1
   return 0
 }
 
-const sorter = (tableState = {}) => {
+const sorter = (tableState: { sorts?: any[] } = {}) => {
   const { sorts = [] } = tableState
 
   if (!sorts.length) return
@@ -20,11 +24,11 @@ const sorter = (tableState = {}) => {
   }
 }
 
-const paginate = ({ page = 0, pageSize = 10 } = {}, rows) => rows.slice(page * pageSize, page * pageSize + pageSize)
+const paginate = ({ page = 0, pageSize = 10 } = {}, rows = undefined) => rows.slice(page * pageSize, page * pageSize + pageSize)
 
 const fieldSorter = id => (a, b) => {
-  var nameA = a[id]
-  var nameB = b[id]
+  const nameA = a[id]
+  const nameB = b[id]
   if (typeof nameA === 'string') nameA.toUpperCase()
   if (typeof nameB === 'string') nameB.toUpperCase()
   if (nameA < nameB) return -1
