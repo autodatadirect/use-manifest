@@ -4,7 +4,7 @@ import { NOT_SORTED } from '../constants/sortDirections'
 import {Definition} from "../components/Manifest";
 
 export interface HeaderCell {
-  loading: ManifestContext['loading']
+  loading: ManifestContext<any, any>['loading']
   sortDirection: Sort['direction']
   setSortDirection: (direction: Sort['direction']) => void
 }

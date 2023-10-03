@@ -1,19 +1,10 @@
 import React, { createContext, useRef, useCallback, useEffect } from 'react'
-import PropTypes from 'prop-types'
 import useManifest, {ManifestContext, Sort} from '../hooks/useManifest.js'
 import useManifestState from '../hooks/useManifestState/index.js'
 import DefaultTable from './DefaultTable/index.js'
 import DefaultControls from './DefaultControls/index.js'
 import Cell from "./DefaultTable/DataCell";
 import SimpleHeader from "./DefaultHeader";
-
-export type Filter = {
-    todo: unknown
-}
-
-export type Row = {
-  todo: unknown
-}
 
 export type Definition = {
   id: string
@@ -23,7 +14,7 @@ export type Definition = {
   headerComponent: typeof SimpleHeader
 }
 
-export type CountFetcher = {
+export type CountFetcher<Filter> = {
     (filter: Filter): Promise<number>
 }
 
@@ -33,20 +24,19 @@ export type RowFetcherProps = {
     sorts: Sort[]
 }
 
-export type RowFetcher = {
-    (filter: Filter, props: RowFetcherProps): Promise<any[]>
+export type RowFetcher<Filter, Row> = {
+    (filter: Filter, props: RowFetcherProps): Promise<Row[]>
 }
 
-// @ts-ignore
 export const manifestContext: React.Context<ManifestContext> = createContext(null)
 
 let rowCallId = 0
 let countCallId = 0
 
-const useCountFetcher = ({ fetchCount }: { fetchCount?: CountFetcher }): (filter: Filter, props: RowFetcherProps) => Promise<void> => {
-  const { setLoadingCount, setCount, setError } = useManifest()
+function useCountFetcher<Filter>({ fetchCount }: { fetchCount?: CountFetcher<Filter> }): (filter: Filter, props: RowFetcherProps) => Promise<void> {
+  const {setLoadingCount, setCount, setError} = useManifest()
   if (!fetchCount) {
-    return async () => {}
+    return async () => { }
   }
   return useCallback(
     async filter => {
@@ -64,14 +54,14 @@ const useCountFetcher = ({ fetchCount }: { fetchCount?: CountFetcher }): (filter
     , [setError, fetchCount, setLoadingCount, setCount])
 }
 
-const useRowFetcher = ({ fetchRows }: { fetchRows: RowFetcher }): (filter: Filter, {page, pageSize, sorts}: RowFetcherProps) => Promise<void> => {
+function useRowFetcher<Filter, Row>({fetchRows}: { fetchRows: RowFetcher<Filter, Row> }): (filter: Filter, { page, pageSize, sorts }: RowFetcherProps) => Promise<void> {
   const { setLoadingRows, setRows, setError } = useManifest()
   return useCallback(
-    async (filter, { page, pageSize, sorts }) => {
+    async (filter, {page, pageSize, sorts}) => {
       const id = ++rowCallId
       setLoadingRows(true)
       try {
-        const rows = await fetchRows(filter, { page, pageSize, sorts })
+        const rows = await fetchRows(filter, {page, pageSize, sorts})
         if (id !== rowCallId) return
         setRows(rows)
       } catch (error) {
@@ -99,18 +89,18 @@ export const useIsFirstLoad = () => {
   return false
 }
 
-export type EffectsProps = {
-    fetchRows: RowFetcher
-    fetchCount?: CountFetcher
+export type EffectsProps<Filter, Row> = {
+    fetchRows: RowFetcher<Filter, Row>
+    fetchCount?: CountFetcher<Filter>
     autoLoad?: boolean
 }
 
-const Effects = ({ fetchRows, fetchCount, autoLoad = false }: EffectsProps) => {
-  const { page, pageSize, sorts, filter, count } = useManifest()
+function Effects<Filter, Row>({fetchRows, fetchCount, autoLoad = false}: EffectsProps<Filter, Row>) {
+  const {page, pageSize, sorts, filter, count} = useManifest<Filter, Row>()
   const isFirstLoad = useIsFirstLoad()
 
-  const runFetchCount = useCountFetcher({ fetchCount })
-  const runFetchRows = useRowFetcher({ fetchRows })
+  const runFetchCount = useCountFetcher<Filter>({fetchCount})
+  const runFetchRows = useRowFetcher<Filter, Row>({fetchRows})
 
   const pageChanged = useDetectChange(page)
   const pageSizeChanged = useDetectChange(pageSize)
@@ -121,10 +111,10 @@ const Effects = ({ fetchRows, fetchCount, autoLoad = false }: EffectsProps) => {
     if (isFirstLoad && !autoLoad) return
 
     if (pageChanged || pageSizeChanged || filterChanged || sortsChanged) {
-      runFetchRows(filter, { page, pageSize, sorts })
+      runFetchRows(filter, {page, pageSize, sorts})
     }
     if (filterChanged && count === null && fetchCount) {
-      runFetchCount(filter, { page, pageSize, sorts })
+      runFetchCount(filter, {page, pageSize, sorts})
     }
   })
 
@@ -137,15 +127,15 @@ const DefaultChildren = () =>
     <DefaultControls />
   </>
 
-export type ManifestProps = {
+export type ManifestProps<Filter, Row> = {
     children: React.ReactNode
-    fetchRows: RowFetcher
-    fetchCount: CountFetcher
-    definition: object[]
+    fetchRows: RowFetcher<Filter, Row>
+    fetchCount: CountFetcher<Filter>
+    definition: Definition[]
     autoLoad?: boolean
 }
 
-const Manifest = ({ children, fetchRows, fetchCount, definition, autoLoad }: ManifestProps) => {
+function Manifest<Filter, Row>({children, fetchRows, fetchCount, definition, autoLoad}: ManifestProps<Filter, Row>) {
   const state = useManifestState()
 
   const contextValue = {
@@ -156,18 +146,17 @@ const Manifest = ({ children, fetchRows, fetchCount, definition, autoLoad }: Man
 
   return (
     <manifestContext.Provider value={contextValue}>
-      <Effects fetchCount={fetchCount} fetchRows={fetchRows} autoLoad={autoLoad} />
-      {children || <DefaultChildren />}
+      <Effects fetchCount={fetchCount} fetchRows={fetchRows} autoLoad={autoLoad}/>
+      {children || <DefaultChildren/>}
     </manifestContext.Provider>
   )
 }
 
-Manifest.propTypes = {
-  fetchRows: PropTypes.func.isRequired,
-  fetchCount: PropTypes.func,
-  children: PropTypes.any,
-  filter: PropTypes.any,
-  definition: PropTypes.array.isRequired
+export function ManifestBuilder<Filter, Row>() {
+  return {
+    Manifest: Manifest<Filter, Row>,
+    useManifest: useManifest<Filter, Row>
+  }
 }
 
 export default Manifest

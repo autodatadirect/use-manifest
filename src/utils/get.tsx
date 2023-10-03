@@ -1,4 +1,4 @@
-export default (obj: any = {}, path = '', defaultValue = '') => {
+export default function(obj: any = {}, path = '', defaultValue = '') {
   const result = String.prototype.split.call(path, /[,[\].]+?/)
     .filter(Boolean)
     .reduce((res, key) => (res !== null && res !== undefined) ? res[key] : res, obj)

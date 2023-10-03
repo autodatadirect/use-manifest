@@ -17,8 +17,8 @@ export const DEFAULT_STATUS_MESSAGE_GENERATOR = ({ count, lastOnPage, firstOnPag
 }
 
 export interface StatusProps {
-  className: string
-  statusMessageGenerator: typeof DEFAULT_STATUS_MESSAGE_GENERATOR
+  className?: string
+  statusMessageGenerator?: typeof DEFAULT_STATUS_MESSAGE_GENERATOR
 }
 
 const Status = ({ className, statusMessageGenerator = DEFAULT_STATUS_MESSAGE_GENERATOR }: StatusProps) => {

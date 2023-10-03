@@ -11,17 +11,18 @@ const computeClasses = ({ className = '', loadingRows }: { className?: string, l
   return s
 }
 
-export interface DefaultTableProps {
+export interface DefaultTableProps<Row> {
   className?: string
-  trPropsHandler?: TableRowProps['trPropsHandler']
-  tdPropsHandler?: TableRowProps['tdPropsHandler']
+  trPropsHandler?: TableRowProps<Row>['trPropsHandler']
+  tdPropsHandler?: TableRowProps<Row>['tdPropsHandler']
 }
 
-const DefaultTable = ({ className, trPropsHandler = EMPTY_PROPS_HANDLER, tdPropsHandler = EMPTY_PROPS_HANDLER }: DefaultTableProps) => {
-  const { definition, rows, loadingRows } = useManifest()
-  const finalClassName = computeClasses({ className, loadingRows })
+function DefaultTable<Row>({ className, trPropsHandler = EMPTY_PROPS_HANDLER, tdPropsHandler = EMPTY_PROPS_HANDLER }: DefaultTableProps<Row>) {
+  const {definition, rows, loadingRows} = useManifest()
+  const finalClassName = computeClasses({className, loadingRows})
   return (
-    <Table className={finalClassName} columnCount={definition.length} rowCount={rows.length} trPropsHandler={trPropsHandler} tdPropsHandler={tdPropsHandler} />
+    <Table className={finalClassName} columnCount={definition.length} rowCount={rows.length}
+           trPropsHandler={trPropsHandler} tdPropsHandler={tdPropsHandler}/>
   )
 }
 

@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import {Definition, Filter, manifestContext, Row} from '../components/Manifest'
+import {Definition, manifestContext} from '../components/Manifest'
 import {ASCENDING, DESCENDING, NOT_SORTED} from "../constants/sortDirections";
 
 export interface Sort {
@@ -7,14 +7,14 @@ export interface Sort {
     direction: typeof ASCENDING | typeof DESCENDING | typeof NOT_SORTED
 }
 
-export interface ManifestContext {
+export interface ManifestContext<Filter, Row> {
     count: number
     setCount: (count: number) => void
     setLoadingCount: (loading: boolean) => void
     loadingCount: boolean
 
     rows: Row[]
-    setRows: (rows: any[]) => void
+    setRows: (rows: Row[]) => void
     setLoadingRows: (loading: boolean) => void
     loadingRows: boolean
 
@@ -35,4 +35,6 @@ export interface ManifestContext {
     filter: Filter
 }
 
-export default (): ManifestContext => useContext(manifestContext)
+export default function<Filter, Row>(): ManifestContext<Filter, Row> {
+    return useContext(manifestContext);
+}
