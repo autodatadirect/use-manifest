@@ -13,7 +13,7 @@ export default (index: number): HeaderCell & Definition => {
   const { definition, setSorts, sorts, loading } = useManifest()
   const def = definition[index]
   const sort = useMemo(() => sorts.find(s => s.id === def.id), [sorts, def])
-  const sortDirection = !sort ? NOT_SORTED : sort.direction
+  const sortDirection = (sort == null) ? NOT_SORTED : sort.direction
 
   const setSortDirection = useCallback((direction: Sort['direction']) => {
     setSorts(def.id, direction)

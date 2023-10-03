@@ -7,7 +7,7 @@
   "scripts": {
     "build": "babel ./src -d ./dist --extensions '.ts,.tsx,.js,.jsx' && tsc && cp ./src/index.css ./dist/index.css",
     "prepublish": "npm run build",
-    "lint": "ts-standard \"./src/**/*.ts\" \"./src/**/*.tsx\" | snazzy",
+    "lint": "ts-standard | snazzy",
     "test": "jest ./src/* --watch",
     "dev": "babel ./src -w -d ./dist"
   },

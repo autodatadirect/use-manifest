@@ -1,5 +1,4 @@
-import {Sort} from "../hooks/useManifest";
-import {State} from "../hooks/useManifestState/reducer";
+import { State } from '../hooks/useManifestState/reducer'
 
 type Sorter = (a: any, b: any) => number
 
@@ -55,11 +54,11 @@ export default (data: any[], filterer: DataFilter = KEEP_ALL) => {
 
   const fetchRows = async (filter: DataFilter, tableViewState: TableViewState) => {
     const all = preprocess(filter, tableViewState)
-    return paginate(tableViewState, all);
+    return paginate(tableViewState, all)
   }
 
   const fetchCount = async (filter: DataFilter, tableViewState: TableViewState) => {
-    return preprocess(filter, tableViewState).length;
+    return preprocess(filter, tableViewState).length
   }
 
   return {

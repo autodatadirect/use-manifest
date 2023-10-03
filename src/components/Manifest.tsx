@@ -31,7 +31,7 @@ let countCallId = 0
 
 function useCountFetcher<Filter> ({ fetchCount }: { fetchCount?: CountFetcher<Filter> }): (filter: Filter, props: RowFetcherProps) => Promise<void> {
   const { setLoadingCount, setCount, setError } = useManifest()
-  if (!fetchCount) {
+  if (fetchCount == null) {
     return async () => { }
   }
   return useCallback(
@@ -109,7 +109,7 @@ function Effects<Filter, Row> ({ fetchRows, fetchCount, autoLoad = false }: Effe
     if (pageChanged || pageSizeChanged || filterChanged || sortsChanged) {
       runFetchRows(filter, { page, pageSize, sorts })
     }
-    if (filterChanged && count === null && fetchCount) {
+    if (filterChanged && count === null && (fetchCount != null)) {
       runFetchCount(filter, { page, pageSize, sorts })
     }
   })

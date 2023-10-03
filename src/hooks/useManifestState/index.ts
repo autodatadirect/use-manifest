@@ -1,4 +1,4 @@
-import {Reducer, useReducer, useRef} from 'react'
+import { useReducer, useRef } from 'react'
 import reducer, { initialState, State } from './reducer'
 import * as types from './actionTypes'
 
@@ -6,14 +6,14 @@ type Dispatch = (value: any) => void
 type ActionCreator = (...value: any) => any
 
 const bindDispatch = function (dispatch: Dispatch, actionCreator: ActionCreator) {
-  return (...args: any) => dispatch(actionCreator(...args));
+  return (...args: any) => dispatch(actionCreator(...args))
 }
 
 export default (): State => {
-  const [state, dispatch]: [State, Dispatch] = useReducer(reducer as Reducer<State, any>, initialState, undefined as any)
+  const [state, dispatch]: [State, Dispatch] = useReducer(reducer, initialState, undefined as any)
   const dispatchersRef = useRef<Partial<State>>()
 
-  if (!dispatchersRef.current) {
+  if (dispatchersRef.current == null) {
     dispatchersRef.current = {
       setPage: bindDispatch(dispatch, page => ({ type: types.SET_PAGE, page })),
       setPageSize: bindDispatch(dispatch, pageSize => ({ type: types.SET_PAGE_SIZE, pageSize })),
