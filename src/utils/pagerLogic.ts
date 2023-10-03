@@ -4,7 +4,7 @@ export const determineTotalPages = (pageSize: number, count: number | null): num
 }
 
 const determinePagesWithoutCount = (numberOfPages: number, currentPage: number, showNext: boolean) => {
-  const pages = []
+  const pages: number[] = []
   const offset = showNext ? 1 : 0
   const firstPage = currentPage - numberOfPages + offset + 1
   const nextPage = currentPage + offset
@@ -17,7 +17,7 @@ const determinePagesWithoutCount = (numberOfPages: number, currentPage: number, 
 }
 
 const determinePagesWithCount = (numberOfPages: number, currentPage: number, pageSize: number, count: number) => {
-  const pages = []
+  const pages: number[] = []
   const totalPages = determineTotalPages(pageSize, count) as number
 
   let firstPage = currentPage - Math.floor((numberOfPages - 1) / 2)
@@ -82,7 +82,7 @@ export const showRelativePages = ({ count, pageSize, page, rows }: ShowRelativeP
   return {
     showFirst: page > 1,
     showPrevious: page > 0,
-    showNext: showNext,
+    showNext,
     showLast: showNext && showLast
   }
 }

@@ -1,12 +1,12 @@
 import React, { createContext, useRef, useCallback, useEffect } from 'react'
-import useManifest, {ManifestContext, Sort} from '../hooks/useManifest.js'
+import useManifest, { ManifestContext, Sort } from '../hooks/useManifest.js'
 import useManifestState from '../hooks/useManifestState/index.js'
 import DefaultTable from './DefaultTable/index.js'
 import DefaultControls from './DefaultControls/index.js'
-import Cell from "./DefaultTable/DataCell";
-import SimpleHeader from "./DefaultHeader";
+import Cell from './DefaultTable/DataCell'
+import SimpleHeader from './DefaultHeader'
 
-export type Definition = {
+export interface Definition {
   id: string
   label?: React.ReactNode
   sortable?: boolean
@@ -14,27 +14,23 @@ export type Definition = {
   headerComponent?: typeof SimpleHeader
 }
 
-export type CountFetcher<Filter> = {
-    (filter: Filter): Promise<number>
+export type CountFetcher<Filter> = (filter: Filter) => Promise<number>
+
+export interface RowFetcherProps {
+  page: number
+  pageSize: number
+  sorts: Sort[]
 }
 
-export type RowFetcherProps = {
-    page: number
-    pageSize: number
-    sorts: Sort[]
-}
+export type RowFetcher<Filter, Row> = (filter: Filter, props: RowFetcherProps) => Promise<Row[]>
 
-export type RowFetcher<Filter, Row> = {
-    (filter: Filter, props: RowFetcherProps): Promise<Row[]>
-}
-
-export const manifestContext: React.Context<ManifestContext<any, any>> = createContext(null)
+export const manifestContext: React.Context<ManifestContext<any, any>> = createContext(null) as React.Context<any>
 
 let rowCallId = 0
 let countCallId = 0
 
-function useCountFetcher<Filter>({ fetchCount }: { fetchCount?: CountFetcher<Filter> }): (filter: Filter, props: RowFetcherProps) => Promise<void> {
-  const {setLoadingCount, setCount, setError} = useManifest()
+function useCountFetcher<Filter> ({ fetchCount }: { fetchCount?: CountFetcher<Filter> }): (filter: Filter, props: RowFetcherProps) => Promise<void> {
+  const { setLoadingCount, setCount, setError } = useManifest()
   if (!fetchCount) {
     return async () => { }
   }
@@ -54,14 +50,14 @@ function useCountFetcher<Filter>({ fetchCount }: { fetchCount?: CountFetcher<Fil
     , [setError, fetchCount, setLoadingCount, setCount])
 }
 
-function useRowFetcher<Filter, Row>({fetchRows}: { fetchRows: RowFetcher<Filter, Row> }): (filter: Filter, { page, pageSize, sorts }: RowFetcherProps) => Promise<void> {
+function useRowFetcher<Filter, Row> ({ fetchRows }: { fetchRows: RowFetcher<Filter, Row> }): (filter: Filter, { page, pageSize, sorts }: RowFetcherProps) => Promise<void> {
   const { setLoadingRows, setRows, setError } = useManifest()
   return useCallback(
-    async (filter, {page, pageSize, sorts}) => {
+    async (filter, { page, pageSize, sorts }) => {
       const id = ++rowCallId
       setLoadingRows(true)
       try {
-        const rows = await fetchRows(filter, {page, pageSize, sorts})
+        const rows = await fetchRows(filter, { page, pageSize, sorts })
         if (id !== rowCallId) return
         setRows(rows)
       } catch (error) {
@@ -89,18 +85,18 @@ export const useIsFirstLoad = () => {
   return false
 }
 
-export type EffectsProps<Filter, Row> = {
-    fetchRows: RowFetcher<Filter, Row>
-    fetchCount?: CountFetcher<Filter>
-    autoLoad?: boolean
+export interface EffectsProps<Filter, Row> {
+  fetchRows: RowFetcher<Filter, Row>
+  fetchCount?: CountFetcher<Filter>
+  autoLoad?: boolean
 }
 
-function Effects<Filter, Row>({fetchRows, fetchCount, autoLoad = false}: EffectsProps<Filter, Row>) {
-  const {page, pageSize, sorts, filter, count} = useManifest<Filter, Row>()
+function Effects<Filter, Row> ({ fetchRows, fetchCount, autoLoad = false }: EffectsProps<Filter, Row>) {
+  const { page, pageSize, sorts, filter, count } = useManifest<Filter, Row>()
   const isFirstLoad = useIsFirstLoad()
 
-  const runFetchCount = useCountFetcher<Filter>({fetchCount})
-  const runFetchRows = useRowFetcher<Filter, Row>({fetchRows})
+  const runFetchCount = useCountFetcher<Filter>({ fetchCount })
+  const runFetchRows = useRowFetcher<Filter, Row>({ fetchRows })
 
   const pageChanged = useDetectChange(page)
   const pageSizeChanged = useDetectChange(pageSize)
@@ -111,10 +107,10 @@ function Effects<Filter, Row>({fetchRows, fetchCount, autoLoad = false}: Effects
     if (isFirstLoad && !autoLoad) return
 
     if (pageChanged || pageSizeChanged || filterChanged || sortsChanged) {
-      runFetchRows(filter, {page, pageSize, sorts})
+      runFetchRows(filter, { page, pageSize, sorts })
     }
     if (filterChanged && count === null && fetchCount) {
-      runFetchCount(filter, {page, pageSize, sorts})
+      runFetchCount(filter, { page, pageSize, sorts })
     }
   })
 
@@ -127,15 +123,15 @@ const DefaultChildren = () =>
     <DefaultControls />
   </>
 
-export type ManifestProps<Filter, Row> = {
-    children?: React.ReactNode | null
-    fetchRows: RowFetcher<Filter, Row>
-    fetchCount: CountFetcher<Filter>
-    definition: Definition[]
-    autoLoad?: boolean
+export interface ManifestProps<Filter, Row> {
+  children?: React.ReactNode | null
+  fetchRows: RowFetcher<Filter, Row>
+  fetchCount: CountFetcher<Filter>
+  definition: Definition[]
+  autoLoad?: boolean
 }
 
-function Manifest<Filter, Row>({children, fetchRows, fetchCount, definition, autoLoad}: ManifestProps<Filter, Row>) {
+function Manifest<Filter, Row> ({ children, fetchRows, fetchCount, definition, autoLoad }: ManifestProps<Filter, Row>) {
   const state = useManifestState()
 
   const contextValue = {
@@ -146,13 +142,13 @@ function Manifest<Filter, Row>({children, fetchRows, fetchCount, definition, aut
 
   return (
     <manifestContext.Provider value={contextValue as any}>
-      <Effects fetchCount={fetchCount} fetchRows={fetchRows} autoLoad={autoLoad}/>
-      {children || <DefaultChildren/>}
+      <Effects fetchCount={fetchCount} fetchRows={fetchRows} autoLoad={autoLoad} />
+      {children || <DefaultChildren />}
     </manifestContext.Provider>
   )
 }
 
-export function ManifestBuilder<Filter, Row>() {
+export function ManifestBuilder<Filter, Row> () {
   return {
     Manifest: Manifest<Filter, Row>,
     useManifest: useManifest<Filter, Row>

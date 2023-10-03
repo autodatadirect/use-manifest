@@ -1,9 +1,23 @@
 import * as actionTypes from './actionTypes'
 import { ASCENDING } from '../../constants/sortDirections'
 import * as pagerLogic from '../../utils/pagerLogic'
-import {Reducer, ReducerWithoutAction} from "react";
+import { Reducer } from 'react'
+import {Sort} from "../useManifest";
 
-export const initialState = {
+export interface State {
+  loadingRows: boolean,
+  loadingCount: boolean,
+  page: number,
+  pageSize: number,
+  sorts: Sort[],
+  count: number | null,
+  rows: any[],
+  filter: any,
+  error: any,
+  rowsLength: number | null
+}
+
+export const initialState: State = {
   loadingRows: false,
   loadingCount: false,
   page: 0,
@@ -16,35 +30,33 @@ export const initialState = {
   rowsLength: null
 }
 
-export type State = Partial<typeof initialState>
-
 export const initialSort = {
   id: '',
   direction: ASCENDING
 }
 
-const setLoadingCount = (state, action) => ({
+const setLoadingCount = (state: State, action: any) => ({
   ...state,
   loadingCount: action.loadingCount
 })
 
-const setLoadingRows = (state, action) => ({
+const setLoadingRows = (state: State, action: any) => ({
   ...state,
   loadingRows: action.loadingRows
 })
 
-const setPage = (state, action) => ({
+const setPage = (state: State, action: any) => ({
   ...state,
   page: action.page
 })
 
-const setPageSize = (state, action) => ({
+const setPageSize = (state: State, action: any) => ({
   ...state,
   pageSize: action.pageSize,
   page: 0
 })
 
-const setSorts = (state, action) => ({
+const setSorts = (state: State, action: any): State => ({
   ...state,
   sorts: [
     {
@@ -56,7 +68,7 @@ const setSorts = (state, action) => ({
   page: 0
 })
 
-const setRows = (state, action) => {
+const setRows = (state: State, action: any): State => {
   return correctRowCount({
     ...state,
     rows: action.rows,
@@ -65,10 +77,12 @@ const setRows = (state, action) => {
   })
 }
 
-export const correctRowCount = (state) => {
+type CorrectRowCountState = Pick<State, 'rows' | 'page' | 'pageSize' | 'count'>
+
+export const correctRowCount = function<T extends CorrectRowCountState>(state: T): T {
   if (!onLastPage(state)) return state
 
-  let calculatedCount = (state.page * state.pageSize) + state.rows.length
+  let calculatedCount: number | null = (state.page * state.pageSize) + state.rows.length
   if (state.rows.length && state.count && state.count === calculatedCount) return state
 
   if (state.pageSize === state.rows.length) {
@@ -82,26 +96,26 @@ export const correctRowCount = (state) => {
   }
 }
 
-const onLastPage = state => {
+const onLastPage = (state: CorrectRowCountState) => {
   if (state.count === null) {
-    return state.rows.length < state.pageSize
+    return (state.rows?.length) < state.pageSize
   }
-  return pagerLogic.determineTotalPages(state.pageSize, state.count) <= (state.page + 1)
+  return pagerLogic.determineTotalPages(state.pageSize, state.count) || 0 <= (state.page + 1)
 }
 
-const setCount = (state, action) => ({
+const setCount = (state: State, action: any) => ({
   ...state,
   count: action.count
 })
 
-const setFilter = (state, action) => ({
+const setFilter = (state: State, action: any) => ({
   ...state,
   filter: action.filter,
   page: 0,
   count: null
 })
 
-const updateState = (state, action) => {
+const updateState = (state: State, action: any) => {
   const updatedState = { ...state }
 
   if (action.filter) {
@@ -126,12 +140,12 @@ const updateState = (state, action) => {
   return updatedState
 }
 
-const setError = (state, action) => ({
+const setError = (state: State, action: any) => ({
   ...state,
   error: action.error
 })
 
-const reducer: Reducer<State, any> = (state, action): State => {
+const reducer: Reducer<State, any> = (state: State, action: any): State => {
   switch (action.type) {
     case actionTypes.SET_PAGE: return setPage(state, action)
     case actionTypes.SET_PAGE_SIZE: return setPageSize(state, action)

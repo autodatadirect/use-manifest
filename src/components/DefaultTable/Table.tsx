@@ -2,9 +2,9 @@ import React, { useMemo } from 'react'
 import HeaderCell from './HeaderCell'
 import Cell from './DataCell'
 import integerSequence from '../../utils/integerSequence'
-import useManifest, {Sort} from '../../hooks/useManifest'
+import useManifest, { Sort } from '../../hooks/useManifest'
 import useCell from '../../hooks/useCell'
-import {Definition} from "../Manifest";
+import { Definition } from '../Manifest'
 
 const EMPTY_PROPS = {}
 
@@ -16,14 +16,16 @@ export interface TableProps<Row> {
   tdPropsHandler: TableRowProps<Row>['tdPropsHandler']
 }
 
-function Table<Row>({className, columnCount, rowCount, trPropsHandler, tdPropsHandler}: TableProps<Row>) {
+function Table<Row> ({ className, columnCount, rowCount, trPropsHandler, tdPropsHandler }: TableProps<Row>) {
   const columnIndexes = useMemo(() => integerSequence(columnCount), [columnCount])
 
   return (
     <table className={`manifest-table ${className || ''}`}>
-      <Headers columnIndexes={columnIndexes}/>
-      <Rows rowCount={rowCount} columnIndexes={columnIndexes} trPropsHandler={trPropsHandler}
-            tdPropsHandler={tdPropsHandler}/>
+      <Headers columnIndexes={columnIndexes} />
+      <Rows
+        rowCount={rowCount} columnIndexes={columnIndexes} trPropsHandler={trPropsHandler}
+        tdPropsHandler={tdPropsHandler}
+      />
     </table>
   )
 }
@@ -46,13 +48,15 @@ export interface RowsProps<Row> {
   tdPropsHandler: TableRowProps<Row>['tdPropsHandler']
 }
 
-function Rows<Row>({rowCount, columnIndexes, trPropsHandler, tdPropsHandler}: RowsProps<Row>) {
+function Rows<Row> ({ rowCount, columnIndexes, trPropsHandler, tdPropsHandler }: RowsProps<Row>) {
   const rowIndices = useMemo(() => integerSequence(rowCount), [rowCount])
 
   return (
     <tbody>
-    {rowIndices.map(i => <TableRow key={i} rowIndex={i} columnIndexes={columnIndexes} trPropsHandler={trPropsHandler}
-                                   tdPropsHandler={tdPropsHandler}/>)}
+      {rowIndices.map(i => <TableRow
+        key={i} rowIndex={i} columnIndexes={columnIndexes} trPropsHandler={trPropsHandler}
+        tdPropsHandler={tdPropsHandler}
+                           />)}
     </tbody>
   )
 }
@@ -69,14 +73,15 @@ export interface TableRowProps<Row> {
   tdPropsHandler: TableDataProps<Row>['tdPropsHandler']
 }
 
-function TableRow<Row>({rowIndex, columnIndexes, trPropsHandler, tdPropsHandler}: TableRowProps<Row>) {
+function TableRow<Row> ({ rowIndex, columnIndexes, trPropsHandler, tdPropsHandler }: TableRowProps<Row>) {
   const state = useManifest<unknown, Row>()
   const row = state.rows[rowIndex]
-  const props = trPropsHandler({rowIndex, row}) || EMPTY_PROPS
+  const props = trPropsHandler({ rowIndex, row }) || EMPTY_PROPS
   return (
     <tr {...props}>
-      {columnIndexes.map(columnIndex => <TableData key={columnIndex} rowIndex={rowIndex} columnIndex={columnIndex}
-                                                   tdPropsHandler={tdPropsHandler}/>)}
+      {columnIndexes.map(columnIndex => <TableData
+        key={columnIndex} rowIndex={rowIndex} columnIndex={columnIndex}
+        tdPropsHandler={tdPropsHandler} />)}
     </tr>
   )
 }
@@ -98,12 +103,12 @@ export interface TableDataProps<Row> {
   tdPropsHandler: (props: TableDataPropsHandlerProps<Row>) => object
 }
 
-function TableData<Row>({rowIndex, columnIndex, tdPropsHandler}: TableDataProps<Row>) {
-  const {row, id, label, value, def, sorts} = useCell<Row>({rowIndex, columnIndex})
-  const props = tdPropsHandler({rowIndex, columnIndex, row, id, label, value, def, sorts}) || EMPTY_PROPS
+function TableData<Row> ({ rowIndex, columnIndex, tdPropsHandler }: TableDataProps<Row>) {
+  const { row, id, label, value, def, sorts } = useCell<Row>({ rowIndex, columnIndex })
+  const props = tdPropsHandler({ rowIndex, columnIndex, row, id, label, value, def, sorts }) || EMPTY_PROPS
   return (
     <td {...props} key={columnIndex + '.' + rowIndex}>
-      <Cell columnIndex={columnIndex} rowIndex={rowIndex}/>
+      <Cell columnIndex={columnIndex} rowIndex={rowIndex} />
     </td>
   )
 }

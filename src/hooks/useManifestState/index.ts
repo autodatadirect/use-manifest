@@ -1,12 +1,17 @@
-import { useReducer, useRef } from 'react'
-import reducer, {initialState, State} from './reducer'
+import {Reducer, useReducer, useRef} from 'react'
+import reducer, { initialState, State } from './reducer'
 import * as types from './actionTypes'
 
-const bindDispatch = (dispatch, actionCreator) => (...args) => dispatch(actionCreator(...args))
+type Dispatch = (value: any) => void
+type ActionCreator = (...value: any) => any
+
+const bindDispatch = function (dispatch: Dispatch, actionCreator: ActionCreator) {
+  return (...args: any) => dispatch(actionCreator(...args));
+}
 
 export default (): State => {
-  const [state, dispatch] = useReducer(reducer, initialState, undefined)
-  const dispatchersRef = useRef<State>()
+  const [state, dispatch]: [State, Dispatch] = useReducer(reducer as Reducer<State, any>, initialState, undefined as any)
+  const dispatchersRef = useRef<Partial<State>>()
 
   if (!dispatchersRef.current) {
     dispatchersRef.current = {
@@ -21,11 +26,11 @@ export default (): State => {
       updateState: bindDispatch(dispatch, ({ filter, sorts, pageSize, page }) => ({ type: types.UPDATE_STATE, filter, sorts, pageSize, page })),
       resetState: bindDispatch(dispatch, () => ({ type: types.RESET })),
       setError: bindDispatch(dispatch, error => ({ type: types.SET_ERROR, error }))
-    } as State
+    } as unknown as State
   }
 
   return {
     ...state,
     ...dispatchersRef.current
-  }
+  } as State
 }

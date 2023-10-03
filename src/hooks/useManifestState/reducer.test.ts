@@ -7,15 +7,15 @@ const is = {
   count: null
 }
 
-const makeArraySize = n => {
-  const arr = []
+const makeArraySize = (n: number) => {
+  const arr: number[] = []
   for (let i = 0; i < n; i++) {
     arr.push(i)
   }
   return arr
 }
 
-const test = (rowsLength, pageIndex, pageSize, count) => {
+const test = (rowsLength: number, pageIndex: number, pageSize: number, count: null | number) => {
   const state = correctRowCount({
     ...is,
     rows: rowsLength ? makeArraySize(rowsLength) : [],

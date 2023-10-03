@@ -1,6 +1,7 @@
-interface Sorter {
-  (a: any, b: any): number
-}
+import {Sort} from "../hooks/useManifest";
+import {State} from "../hooks/useManifestState/reducer";
+
+type Sorter = (a: any, b: any) => number
 
 const reverse = (sorter: Sorter) => (a: any, b: any) => {
   const res = sorter(a, b)
@@ -9,10 +10,11 @@ const reverse = (sorter: Sorter) => (a: any, b: any) => {
   return 0
 }
 
-const sorter = (tableState: { sorts?: any[] } = {}) => {
-  const { sorts = [] } = tableState
+const sorter = (tableState: Partial<State> = {}) => {
+  let { sorts } = tableState
+  sorts ??= []
 
-  if (!sorts.length) return
+  if (sorts.length === 0) return
 
   const sort = sorts[0]
   if (!sort || !sort.id) return
@@ -24,30 +26,40 @@ const sorter = (tableState: { sorts?: any[] } = {}) => {
   }
 }
 
-const paginate = ({ page = 0, pageSize = 10 } = {}, rows = undefined) => rows.slice(page * pageSize, page * pageSize + pageSize)
+const paginate = ({ page = 0, pageSize = 10 } = {}, rows: any[] | undefined = undefined) => rows?.slice(page * pageSize, page * pageSize + pageSize)
 
-const fieldSorter = id => (a, b) => {
-  const nameA = a[id]
-  const nameB = b[id]
-  if (typeof nameA === 'string') nameA.toUpperCase()
-  if (typeof nameB === 'string') nameB.toUpperCase()
+const fieldSorter = (id: string) => (a: [index: string], b: [index: string]) => {
+  let nameA: any = (a as any)[id]
+  if (typeof nameA === 'string') {
+    nameA = nameA.toUpperCase()
+  }
+
+  let nameB: any = (b as any)[id]
+  if (typeof nameB === 'string') {
+    nameB = nameB.toUpperCase()
+  }
+
   if (nameA < nameB) return -1
   if (nameA > nameB) return 1
+
   return 0
 }
 
 const KEEP_ALL = () => true
 
-export default (data, filterer = KEEP_ALL) => {
-  const preprocess = (filter, tableViewState) => data.filter(filterer).sort(sorter(tableViewState))
+type DataFilter = (...args: any) => boolean
+type TableViewState = any
 
-  const fetchRows = (filter, tableViewState) => {
+export default (data: any[], filterer: DataFilter = KEEP_ALL) => {
+  const preprocess = (filter: DataFilter, tableViewState: TableViewState) => data.filter(filterer).sort(sorter(tableViewState))
+
+  const fetchRows = async (filter: DataFilter, tableViewState: TableViewState) => {
     const all = preprocess(filter, tableViewState)
-    return Promise.resolve(paginate(tableViewState, all))
+    return paginate(tableViewState, all);
   }
 
-  const fetchCount = (filter, tableViewState) => {
-    return Promise.resolve(preprocess(filter, tableViewState).length)
+  const fetchCount = async (filter: DataFilter, tableViewState: TableViewState) => {
+    return preprocess(filter, tableViewState).length;
   }
 
   return {

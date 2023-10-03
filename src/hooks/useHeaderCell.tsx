@@ -1,7 +1,7 @@
 import { useMemo, useCallback } from 'react'
-import useManifest, {ManifestContext, Sort} from './useManifest'
+import useManifest, { ManifestContext, Sort } from './useManifest'
 import { NOT_SORTED } from '../constants/sortDirections'
-import {Definition} from "../components/Manifest";
+import { Definition } from '../components/Manifest'
 
 export interface HeaderCell {
   loading: ManifestContext<any, any>['loading']

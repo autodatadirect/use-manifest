@@ -1,7 +1,7 @@
 import React from 'react'
 import Pager from '../ButtonPager'
-import PageSizer, {PageSizerProps} from './PageSizer'
-import Status, {DEFAULT_STATUS_MESSAGE_GENERATOR} from './Status'
+import PageSizer, { PageSizerProps } from './PageSizer'
+import Status, { DEFAULT_STATUS_MESSAGE_GENERATOR } from './Status'
 
 export interface DefaultControlsProps extends PageSizerProps {
   statusMessageGenerator?: typeof DEFAULT_STATUS_MESSAGE_GENERATOR

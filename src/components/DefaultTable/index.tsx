@@ -1,5 +1,5 @@
 import React from 'react'
-import Table, {TableRowProps} from './Table'
+import Table, { TableRowProps } from './Table'
 import useManifest from '../../hooks/useManifest'
 
 const EMPTY_PROPS = {}
@@ -17,12 +17,14 @@ export interface DefaultTableProps<Row> {
   tdPropsHandler?: TableRowProps<Row>['tdPropsHandler']
 }
 
-function DefaultTable<Row>({ className, trPropsHandler = EMPTY_PROPS_HANDLER, tdPropsHandler = EMPTY_PROPS_HANDLER }: DefaultTableProps<Row>) {
-  const {definition, rows, loadingRows} = useManifest()
-  const finalClassName = computeClasses({className, loadingRows})
+function DefaultTable<Row> ({ className, trPropsHandler = EMPTY_PROPS_HANDLER, tdPropsHandler = EMPTY_PROPS_HANDLER }: DefaultTableProps<Row>) {
+  const { definition, rows, loadingRows } = useManifest()
+  const finalClassName = computeClasses({ className, loadingRows })
   return (
-    <Table className={finalClassName} columnCount={definition.length} rowCount={rows.length}
-           trPropsHandler={trPropsHandler} tdPropsHandler={tdPropsHandler}/>
+    <Table
+      className={finalClassName} columnCount={definition.length} rowCount={rows.length}
+      trPropsHandler={trPropsHandler} tdPropsHandler={tdPropsHandler}
+    />
   )
 }
 

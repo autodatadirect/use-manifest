@@ -67,8 +67,8 @@ describe('pagerLogic', () => {
   const a = (showFirst: boolean, showPrevious: boolean, showNext: boolean, showLast: boolean) => ({ showFirst, showLast, showNext, showPrevious })
 
   const arr = (size: number) => {
-    const array = []
-    for (var i = 0; i < size; i++) {
+    const array: number[] = []
+    for (let i = 0; i < size; i++) {
       array.push(i)
     }
     return array
