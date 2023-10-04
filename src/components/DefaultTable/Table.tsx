@@ -16,11 +16,11 @@ export interface TableProps<Row> {
   tdPropsHandler: TableRowProps<Row>['tdPropsHandler']
 }
 
-function Table<Row> ({ className, columnCount, rowCount, trPropsHandler, tdPropsHandler }: TableProps<Row>) {
+function Table<Row> ({ className, columnCount, rowCount, trPropsHandler, tdPropsHandler }: TableProps<Row>): React.JSX.Element {
   const columnIndexes = useMemo(() => integerSequence(columnCount), [columnCount])
 
   return (
-    <table className={`manifest-table ${className || ''}`}>
+    <table className={`manifest-table ${className ?? ''}`}>
       <Headers columnIndexes={columnIndexes} />
       <Rows
         rowCount={rowCount} columnIndexes={columnIndexes} trPropsHandler={trPropsHandler}
@@ -34,7 +34,7 @@ export interface HeadersProps {
   columnIndexes: number[]
 }
 
-const Headers = ({ columnIndexes }: HeadersProps) =>
+const Headers = ({ columnIndexes }: HeadersProps): React.JSX.Element =>
   <thead>
     <tr>
       {columnIndexes.map(i => <th key={i}><HeaderCell columnIndex={i} /></th>)}
@@ -48,7 +48,7 @@ export interface RowsProps<Row> {
   tdPropsHandler: TableRowProps<Row>['tdPropsHandler']
 }
 
-function Rows<Row> ({ rowCount, columnIndexes, trPropsHandler, tdPropsHandler }: RowsProps<Row>) {
+function Rows<Row> ({ rowCount, columnIndexes, trPropsHandler, tdPropsHandler }: RowsProps<Row>): React.JSX.Element {
   const rowIndices = useMemo(() => integerSequence(rowCount), [rowCount])
 
   return (
@@ -69,14 +69,14 @@ export interface TableRowPropsHandlerProps<Row> {
 export interface TableRowProps<Row> {
   rowIndex: number
   columnIndexes: number[]
-  trPropsHandler: (props: TableRowPropsHandlerProps<Row>) => object
+  trPropsHandler: (props: TableRowPropsHandlerProps<Row>) => object | null
   tdPropsHandler: TableDataProps<Row>['tdPropsHandler']
 }
 
-function TableRow<Row> ({ rowIndex, columnIndexes, trPropsHandler, tdPropsHandler }: TableRowProps<Row>) {
+function TableRow<Row> ({ rowIndex, columnIndexes, trPropsHandler, tdPropsHandler }: TableRowProps<Row>): React.JSX.Element {
   const state = useManifest<unknown, Row>()
   const row = state.rows[rowIndex]
-  const props = trPropsHandler({ rowIndex, row }) || EMPTY_PROPS
+  const props = trPropsHandler({ rowIndex, row }) ?? EMPTY_PROPS
   return (
     <tr {...props}>
       {columnIndexes.map(columnIndex => <TableData
@@ -100,14 +100,14 @@ export interface TableDataPropsHandlerProps<Row> {
 export interface TableDataProps<Row> {
   rowIndex: number
   columnIndex: number
-  tdPropsHandler: (props: TableDataPropsHandlerProps<Row>) => object
+  tdPropsHandler: (props: TableDataPropsHandlerProps<Row>) => object | null
 }
 
-function TableData<Row> ({ rowIndex, columnIndex, tdPropsHandler }: TableDataProps<Row>) {
+function TableData<Row> ({ rowIndex, columnIndex, tdPropsHandler }: TableDataProps<Row>): React.JSX.Element {
   const { row, id, label, value, def, sorts } = useCell<Row>({ rowIndex, columnIndex })
-  const props = tdPropsHandler({ rowIndex, columnIndex, row, id, label, value, def, sorts }) || EMPTY_PROPS
+  const props = (tdPropsHandler({ rowIndex, columnIndex, row, id, label, value, def, sorts }) != null) || EMPTY_PROPS
   return (
-    <td {...props} key={columnIndex + '.' + rowIndex}>
+    <td {...props} key={`${columnIndex}.${rowIndex}`}>
       <Cell columnIndex={columnIndex} rowIndex={rowIndex} />
     </td>
   )

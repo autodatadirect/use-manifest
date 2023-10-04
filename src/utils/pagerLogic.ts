@@ -67,7 +67,7 @@ type ShowRelativePages = (props: {
 }) => {
   showLast: boolean
   showFirst: boolean
-  showNext: any
+  showNext: boolean
   showPrevious: boolean
 }
 

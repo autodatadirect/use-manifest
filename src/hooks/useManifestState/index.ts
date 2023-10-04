@@ -14,7 +14,7 @@ export default (): State => {
   const dispatchersRef = useRef<Partial<State>>()
 
   if (dispatchersRef.current == null) {
-    dispatchersRef.current = {
+    const current: any = {
       setPage: bindDispatch(dispatch, page => ({ type: types.SET_PAGE, page })),
       setPageSize: bindDispatch(dispatch, pageSize => ({ type: types.SET_PAGE_SIZE, pageSize })),
       setSorts: bindDispatch(dispatch, (id, direction) => ({ type: types.SET_SORTS, id, direction })),
@@ -26,11 +26,12 @@ export default (): State => {
       updateState: bindDispatch(dispatch, ({ filter, sorts, pageSize, page }) => ({ type: types.UPDATE_STATE, filter, sorts, pageSize, page })),
       resetState: bindDispatch(dispatch, () => ({ type: types.RESET })),
       setError: bindDispatch(dispatch, error => ({ type: types.SET_ERROR, error }))
-    } as unknown as State
+    }
+    dispatchersRef.current = current as State
   }
 
   return {
     ...state,
     ...dispatchersRef.current
-  } as State
+  }
 }

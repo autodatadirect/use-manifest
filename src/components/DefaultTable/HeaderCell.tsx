@@ -2,7 +2,7 @@ import React from 'react'
 import SimpleHeader from '../DefaultHeader'
 import useHeaderCell from '../../hooks/useHeaderCell'
 
-const HeaderCell = ({ columnIndex }: { columnIndex: number }) => {
+const HeaderCell = ({ columnIndex }: { columnIndex: number }): React.JSX.Element => {
   const { headerComponent } = useHeaderCell(columnIndex)
   const Component = (headerComponent != null) || SimpleHeader
 

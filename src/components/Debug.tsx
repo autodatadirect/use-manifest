@@ -1,7 +1,7 @@
 import React from 'react'
 import useManifest from '../hooks/useManifest'
 
-export default function<Filter, Row>() {
+export default function<Filter, Row>(): React.JSX.Element {
   const state = useManifest<Filter, Row>()
   const displayState: any = { ...state }
   delete displayState.rows

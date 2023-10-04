@@ -10,7 +10,7 @@ export interface Definition {
   id: string
   label?: React.ReactNode
   sortable?: boolean
-  cellComponent: typeof Cell
+  cellComponent?: typeof Cell
   headerComponent?: typeof SimpleHeader
 }
 
@@ -76,9 +76,9 @@ const useDetectChange = (value: any): boolean => {
   return false
 }
 
-export const useIsFirstLoad = () => {
+export const useIsFirstLoad = (): boolean => {
   const ref = useRef<boolean>()
-  if (!ref.current) {
+  if (ref.current === undefined || !ref.current) {
     ref.current = true
     return true
   }
@@ -91,7 +91,7 @@ export interface EffectsProps<Filter, Row> {
   autoLoad?: boolean
 }
 
-function Effects<Filter, Row> ({ fetchRows, fetchCount, autoLoad = false }: EffectsProps<Filter, Row>) {
+function Effects<Filter, Row> ({ fetchRows, fetchCount, autoLoad = false }: EffectsProps<Filter, Row>): null {
   const { page, pageSize, sorts, filter, count } = useManifest<Filter, Row>()
   const isFirstLoad = useIsFirstLoad()
 
@@ -107,17 +107,17 @@ function Effects<Filter, Row> ({ fetchRows, fetchCount, autoLoad = false }: Effe
     if (isFirstLoad && !autoLoad) return
 
     if (pageChanged || pageSizeChanged || filterChanged || sortsChanged) {
-      runFetchRows(filter, { page, pageSize, sorts })
+      runFetchRows(filter, { page, pageSize, sorts }).catch(console.error)
     }
     if (filterChanged && count === null && (fetchCount != null)) {
-      runFetchCount(filter, { page, pageSize, sorts })
+      runFetchCount(filter, { page, pageSize, sorts }).catch(console.error)
     }
   })
 
   return null
 }
 
-const DefaultChildren = () =>
+const DefaultChildren = (): React.JSX.Element =>
   <>
     <DefaultTable />
     <DefaultControls />
@@ -131,7 +131,7 @@ export interface ManifestProps<Filter, Row> {
   autoLoad?: boolean
 }
 
-function Manifest<Filter, Row> ({ children, fetchRows, fetchCount, definition, autoLoad }: ManifestProps<Filter, Row>) {
+function Manifest<Filter, Row> ({ children, fetchRows, fetchCount, definition, autoLoad }: ManifestProps<Filter, Row>): React.JSX.Element {
   const state = useManifestState()
 
   const contextValue = {
@@ -143,12 +143,15 @@ function Manifest<Filter, Row> ({ children, fetchRows, fetchCount, definition, a
   return (
     <manifestContext.Provider value={contextValue as any}>
       <Effects fetchCount={fetchCount} fetchRows={fetchRows} autoLoad={autoLoad} />
-      {children || <DefaultChildren />}
+      {children ?? <DefaultChildren />}
     </manifestContext.Provider>
   )
 }
 
-export function ManifestBuilder<Filter, Row> () {
+export function ManifestBuilder<Filter, Row> (): {
+  useManifest: () => ManifestContext<Filter, Row>
+  Manifest: (props: ManifestProps<Filter, Row>) => React.JSX.Element
+} {
   return {
     Manifest: Manifest<Filter, Row>,
     useManifest: useManifest<Filter, Row>

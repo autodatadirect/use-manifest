@@ -9,7 +9,7 @@ export default ({ numberOfPages }: { numberOfPages?: number }): {
   showLast: boolean
   page: number
   showFirst: boolean
-  showNext: any
+  showNext: boolean
   loading: boolean
   setPageSize: (pageSize: number) => void
   setPage: (page: number) => void

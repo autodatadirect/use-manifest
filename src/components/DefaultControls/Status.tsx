@@ -8,7 +8,7 @@ export interface StatusMessageGeneratorProps {
   loading: boolean
 }
 
-export const DEFAULT_STATUS_MESSAGE_GENERATOR = ({ count, lastOnPage, firstOnPage, loading }: StatusMessageGeneratorProps) => {
+export const DEFAULT_STATUS_MESSAGE_GENERATOR = ({ count, lastOnPage, firstOnPage, loading }: StatusMessageGeneratorProps): React.ReactNode => {
   const counter = `Showing ${firstOnPage} to ${lastOnPage}`
   if (loading && count === null) return 'Loading ...'
   if (count === null) return counter
@@ -18,13 +18,13 @@ export const DEFAULT_STATUS_MESSAGE_GENERATOR = ({ count, lastOnPage, firstOnPag
 
 export interface StatusProps {
   className?: string
-  statusMessageGenerator?: typeof DEFAULT_STATUS_MESSAGE_GENERATOR
+  statusMessageGenerator: typeof DEFAULT_STATUS_MESSAGE_GENERATOR
 }
 
-const Status = ({ className, statusMessageGenerator = DEFAULT_STATUS_MESSAGE_GENERATOR }: StatusProps) => {
+const Status = ({ className, statusMessageGenerator = DEFAULT_STATUS_MESSAGE_GENERATOR }: StatusProps): React.JSX.Element => {
   const { count, lastOnPage, firstOnPage, loading } = useStatus()
   return (
-    <div className={'manifest-status' + (className ? ' ' + className : '')}>
+    <div className={'manifest-status' + (className == null ? '' : ' ' + className)}>
       {statusMessageGenerator({ count, lastOnPage, firstOnPage, loading })}
     </div>
   )

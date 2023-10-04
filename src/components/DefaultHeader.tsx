@@ -4,11 +4,11 @@ import useHeaderCell from '../hooks/useHeaderCell'
 import { Sort } from '../hooks/useManifest'
 import { ASCENDING, DESCENDING } from '../constants/sortDirections'
 
-const SimpleHeader = ({ columnIndex }: { columnIndex: number }) => {
+const SimpleHeader = ({ columnIndex }: { columnIndex: number }): React.JSX.Element => {
   const { setSortDirection, label, sortDirection, sortable } = useHeaderCell(columnIndex)
 
   const handleSort = useCallback(() => {
-    if (!sortable) {
+    if (sortable == null || !sortable) {
       return
     }
 
@@ -26,10 +26,10 @@ SimpleHeader.propTypes = {
   columnIndex: PropTypes.number.isRequired
 }
 
-const sortClass = ({ sortable, sortDirection }: { sortable?: boolean, sortDirection?: Sort['direction'] }) => {
+const sortClass = ({ sortable, sortDirection }: { sortable?: boolean | null, sortDirection?: Sort['direction'] }): React.JSX.Element => {
   const classes: string[] = []
 
-  if (sortable) {
+  if (sortable != null) {
     classes.push('sortable')
   }
 
