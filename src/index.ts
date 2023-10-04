@@ -12,7 +12,20 @@ import ButtonPager from './components/ButtonPager'
 import localFetcher from './utils/localFetcher'
 import { ASCENDING, DESCENDING, NOT_SORTED } from './constants/sortDirections'
 
+export type * from './hooks/useManifest'
+export type * from './hooks/useCell'
+export type * from './hooks/useHeaderCell'
+export type * from './hooks/usePager'
+export type * from './hooks/useStatus'
+export type * from './hooks/useManifestState'
 export type * from './components/Manifest'
+export type * from './components/DefaultControls'
+export type * from './components/DefaultControls/PageSizer'
+export type * from './components/DefaultControls/Status'
+export type * from './components/DefaultTable'
+export type * from './components/DefaultTable/Table'
+export type * from './components/DefaultTable/DataCell'
+export type * from './components/DefaultTable/HeaderCell'
 
 export {
   useManifest,

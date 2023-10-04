@@ -18,7 +18,7 @@ export const DEFAULT_STATUS_MESSAGE_GENERATOR = ({ count, lastOnPage, firstOnPag
 
 export interface StatusProps {
   className?: string
-  statusMessageGenerator: typeof DEFAULT_STATUS_MESSAGE_GENERATOR
+  statusMessageGenerator?: typeof DEFAULT_STATUS_MESSAGE_GENERATOR
 }
 
 const Status = ({ className, statusMessageGenerator = DEFAULT_STATUS_MESSAGE_GENERATOR }: StatusProps): React.JSX.Element => {
