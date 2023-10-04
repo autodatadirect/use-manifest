@@ -26,7 +26,7 @@ SimpleHeader.propTypes = {
   columnIndex: PropTypes.number.isRequired
 }
 
-const sortClass = ({ sortable, sortDirection }: { sortable?: boolean | null, sortDirection?: Sort['direction'] }): React.JSX.Element => {
+const sortClass = ({ sortable, sortDirection }: { sortable?: boolean | null, sortDirection?: Sort['direction'] }): string => {
   const classes: string[] = []
 
   if (sortable != null) {

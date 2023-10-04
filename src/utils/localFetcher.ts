@@ -9,7 +9,7 @@ const reverse = (sorter: Sorter) => (a: any, b: any): number => {
   return 0
 }
 
-const sorter = (tableState: Partial<State> = {}): Sorter => {
+const sorter = (tableState: Partial<State> = {}): Sorter | undefined => {
   let { sorts } = tableState
   sorts ??= []
 

@@ -100,7 +100,7 @@ const onLastPage = (state: CorrectRowCountState): boolean => {
   if (state.count === null) {
     return (state.rows?.length) < state.pageSize
   }
-  return pagerLogic.determineTotalPages(state.pageSize, state.count) <= (state.page + 1)
+  return pagerLogic.determineTotalPages(state.pageSize, state.count) as number <= (state.page + 1)
 }
 
 const setCount = (state: State, action: any): State => ({

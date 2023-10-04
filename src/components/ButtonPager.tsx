@@ -1,8 +1,8 @@
-import React, { useCallback } from 'react'
+import React, { ReactNode, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import usePager from '../hooks/usePager'
 
-const Pager = ({ className }: { className?: string }): React.JSX.Element => {
+const Pager = ({ className }: { className?: string }): ReactNode => {
   const { page, pages, count, pageSize, loading, showFirst, showPrevious, showNext, showLast } = usePager({ numberOfPages: 5 })
   const lastPage = Math.ceil(count / pageSize) - 1
 

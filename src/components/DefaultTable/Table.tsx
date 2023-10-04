@@ -94,7 +94,7 @@ export interface TableDataPropsHandlerProps<Row> {
   label: React.ReactNode
   value: object
   def: Definition
-  sorts: [Sort]
+  sorts: Sort[]
 }
 
 export interface TableDataProps<Row> {
