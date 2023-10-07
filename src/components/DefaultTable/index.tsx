@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import Table, { TableRowProps } from './Table'
 import useManifest from '../../hooks/useManifest'
 
@@ -17,7 +17,7 @@ export interface DefaultTableProps<Row> {
   tdPropsHandler?: TableRowProps<Row>['tdPropsHandler']
 }
 
-function DefaultTable<Row> ({ className, trPropsHandler = EMPTY_PROPS_HANDLER, tdPropsHandler = EMPTY_PROPS_HANDLER }: DefaultTableProps<Row>): React.JSX.Element {
+function DefaultTable<Row> ({ className, trPropsHandler = EMPTY_PROPS_HANDLER, tdPropsHandler = EMPTY_PROPS_HANDLER }: DefaultTableProps<Row>): ReactNode {
   const { definition, rows, loadingRows } = useManifest()
   const finalClassName = computeClasses({ className, loadingRows })
   return (

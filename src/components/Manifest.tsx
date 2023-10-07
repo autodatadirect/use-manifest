@@ -1,4 +1,4 @@
-import React, { createContext, useRef, useCallback, useEffect } from 'react'
+import React, { createContext, useRef, useCallback, useEffect, FC } from 'react'
 import useManifest, { ManifestContext, Sort } from '../hooks/useManifest.js'
 import useManifestState from '../hooks/useManifestState/index.js'
 import DefaultTable from './DefaultTable/index.js'
@@ -117,7 +117,7 @@ function Effects<Filter, Row> ({ fetchRows, fetchCount, autoLoad = false }: Effe
   return null
 }
 
-const DefaultChildren = (): React.JSX.Element =>
+const DefaultChildren: FC = () =>
   <>
     <DefaultTable />
     <DefaultControls />

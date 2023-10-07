@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { FC, useCallback } from 'react'
 import useManifest from '../../hooks/useManifest'
 
 export const DEFAULT_PAGE_SIZES = [10, 20, 50, 100, 200]
@@ -11,7 +11,7 @@ export interface PageSizerProps {
   pageSizeLabelGenerator?: typeof DEFAULT_TEXT_GENERATOR
 }
 
-const PageSizer = ({ className, pageSizes = DEFAULT_PAGE_SIZES, pageSizeLabelGenerator = DEFAULT_TEXT_GENERATOR }: PageSizerProps): React.JSX.Element => {
+const PageSizer: FC<PageSizerProps> = ({ className, pageSizes = DEFAULT_PAGE_SIZES, pageSizeLabelGenerator = DEFAULT_TEXT_GENERATOR }) => {
   const { pageSize, setPageSize } = useManifest()
 
   const handlePageSizeChange = useCallback(({ target }: { target: HTMLSelectElement }) => {

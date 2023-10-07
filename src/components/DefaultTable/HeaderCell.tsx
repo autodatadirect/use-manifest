@@ -1,8 +1,12 @@
-import React from 'react'
+import React, { FC } from 'react'
 import SimpleHeader from '../DefaultHeader'
 import useHeaderCell from '../../hooks/useHeaderCell'
 
-const HeaderCell = ({ columnIndex }: { columnIndex: number }): React.JSX.Element => {
+export interface HeaderCellProps {
+  columnIndex: number
+}
+
+const HeaderCell: FC<HeaderCellProps> = ({ columnIndex }) => {
   const { headerComponent } = useHeaderCell(columnIndex)
   const Component = headerComponent ?? SimpleHeader
 

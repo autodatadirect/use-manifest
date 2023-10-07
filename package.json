@@ -5,10 +5,10 @@
   "main": "./dist/index.js",
   "repository": "https://github.com/autodatadirect/use-manifest",
   "scripts": {
-    "build": "babel ./src -d ./dist --extensions '.ts,.tsx,.js,.jsx' && tsc && cp ./src/index.css ./dist/index.css",
+    "build": "tsc && cp ./src/index.css ./dist/index.css",
     "prepublish": "npm run build",
     "lint": "ts-standard | snazzy",
-    "lint2": "eslint ./src | snazzy",
+    "lint-fix": "ts-standard --fix | snazzy",
     "test": "jest ./src/* --watch",
     "dev": "babel ./src -w -d ./dist"
   },

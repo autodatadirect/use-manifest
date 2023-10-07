@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import { Definition, manifestContext } from '../components/Manifest'
 import { ASCENDING, DESCENDING, NOT_SORTED } from '../constants/sortDirections'
+import { State } from './useManifestState/reducer'
 
 export interface Sort {
   id?: string
@@ -20,6 +21,8 @@ export interface ManifestContext<Filter, Row> {
 
   definition: Definition[]
 
+  updateState: (state: Partial<State>) => void
+  error: any
   setError: (error: any) => void
 
   pageSize: number
