@@ -19,6 +19,7 @@ export type RowFetcher = BareRowFetcher<Filter, typeof definition>
 export const useManifest = useBareManifest<typeof definition, Filter>
 
 const ColorSquare: FC<{ color: string }> = ({ color }) =>
+  <div style={{ textAlign: 'center' }}>
   <span
     title={color} style={{
       backgroundColor: color,
@@ -30,6 +31,7 @@ const ColorSquare: FC<{ color: string }> = ({ color }) =>
       marginRight: '3px'
     }}
   />
+  </div>
 
 const ColorCell = ({ rowIndex }: { rowIndex: number }): ReactNode => {
   const row = useManifest().rows[rowIndex]
@@ -90,7 +92,7 @@ const FilterSelect: FC = () => {
   useOnce(() => colorFilter(ColorType.Any))
 
   return (
-    <div style={{ backgroundColor: '#eee', textAlign: 'center' }}>
+    <div style={{ backgroundColor: '#ddd', textAlign: 'center', marginBottom: '1em' }}>
       Filter by type:
       <select onChange={e => colorFilter(parseInt(e.target.value) as ColorType)}
               style={{ margin: '0.5em'}}>
@@ -104,8 +106,9 @@ const FilterSelect: FC = () => {
   )
 }
 
+// TODO: Don't use DefaultChildren here - actual dependent projects should not.
 const App: FC = () =>
-  <div className='App' style={{ width: '300px', padding: '40px' }}>
+  <div className='App' style={{ width: '300px', padding: '20px', backgroundColor: '#f5f5f5', margin: '40px' }}>
     <Manifest fetchRows={fetchRows} fetchCount={fetchCount} definition={definition} autoLoad>
       <FilterSelect />
       <DefaultChildren />
