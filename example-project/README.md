@@ -10,5 +10,15 @@ All you should have to do to get started is `npm ci && npm run start`
 ## Troubleshooting!
 
 There can be some wonk with multiple react dependencies and whatnot.
-If the example seems to be mysteriously crashing, delete use-manifest/node_modules and maybe redo
-`npm ci` here in example-project before trying `npm run start` again.
+If the example seems to be mysteriously crashing or has bizarre type errors, try deleting
+use-manifest/node_modules/ and maybe redo `npm ci` here in example-project before trying
+`npm run start` again.
+
+You may find yourself using a pattern like
+```
+cd ..; npm ci && npm run build && rm -rf node_modules && cd example-project; npm ci && npm run start
+```
+
+...assuming you run this command from already within example-project.
+
+I'm not going to tell you this is beautiful, but it should mostly work.
