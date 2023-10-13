@@ -14,7 +14,7 @@ const determineLastOnPageWithoutCount = (page: number, pageSize: number): number
 
 export default (): {
   lastOnPage: number
-  count: number
+  count: number | null
   pageSize: number
   firstOnPage: number
   page: number

@@ -25,7 +25,7 @@ const Status: FC<StatusProps> = ({ className, statusMessageGenerator = DEFAULT_S
   const { count, lastOnPage, firstOnPage, loading } = useStatus()
   return (
     <div className={'manifest-status' + (className == null ? '' : ' ' + className)}>
-      {statusMessageGenerator({ count, lastOnPage, firstOnPage, loading })}
+      {statusMessageGenerator({ count: count ?? 0, lastOnPage, firstOnPage, loading })}
     </div>
   )
 }

@@ -3,7 +3,7 @@ import usePager from '../hooks/usePager'
 
 const Pager: FC<{ className?: string }> = ({ className }) => {
   const { page, pages, count, pageSize, loading, showFirst, showPrevious, showNext, showLast } = usePager({ numberOfPages: 5 })
-  const lastPage = Math.ceil(count / pageSize) - 1
+  const lastPage = Math.ceil(count ?? 0 / pageSize) - 1
 
   if (count != null && count < 1) return null
 

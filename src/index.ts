@@ -1,5 +1,5 @@
 import useManifest from './hooks/useManifest'
-import Manifest from './components/Manifest'
+import Manifest, { DefaultChildren } from './components/Manifest'
 import Debug from './components/Debug'
 import useCell from './hooks/useCell'
 import useHeaderCell from './hooks/useHeaderCell'
@@ -33,6 +33,7 @@ export {
   useHeaderCell,
   usePager,
   Manifest,
+  DefaultChildren,
   Debug,
   DefaultTable,
   DefaultControls,

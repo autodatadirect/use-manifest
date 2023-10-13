@@ -1,4 +1,4 @@
-import useManifest, { Sort } from './useManifest'
+import { Sort, useManifestRaw } from './useManifest'
 import get from '../utils/get'
 import { Definition } from '../components/Manifest'
 
@@ -12,7 +12,7 @@ export interface UseCellReturn<Row> extends Definition {
 }
 
 export default function<Row>({ columnIndex, rowIndex }: { columnIndex: number, rowIndex: number }): UseCellReturn<Row> {
-  const { definition, rows, sorts, setSorts, loading } = useManifest<unknown, Row>()
+  const { definition, rows, sorts, setSorts, loadingCount, loadingRows } = useManifestRaw<unknown, Row>()
   const def = definition[columnIndex]
   const row = rows[rowIndex]
   const value = get(row, def.id)
@@ -24,6 +24,6 @@ export default function<Row>({ columnIndex, rowIndex }: { columnIndex: number, r
     row,
     value,
     setSorts,
-    loading
+    loading: loadingRows || loadingCount
   }
 }

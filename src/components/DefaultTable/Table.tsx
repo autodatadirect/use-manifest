@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import HeaderCell from './HeaderCell'
 import Cell from './DataCell'
 import integerSequence from '../../utils/integerSequence'
-import useManifest, { Sort } from '../../hooks/useManifest'
+import { Sort, useManifestRaw } from '../../hooks/useManifest'
 import useCell from '../../hooks/useCell'
 import { Definition } from '../Manifest'
 
@@ -74,9 +74,10 @@ export interface TableRowProps<Row> {
 }
 
 function TableRow<Row> ({ rowIndex, columnIndexes, trPropsHandler, tdPropsHandler }: TableRowProps<Row>): React.JSX.Element {
-  const state = useManifest<unknown, Row>()
+  const state = useManifestRaw<unknown, Row>()
   const row = state.rows[rowIndex]
   const props = trPropsHandler({ rowIndex, row }) ?? EMPTY_PROPS
+
   return (
     <tr {...props}>
       {columnIndexes.map(columnIndex => <TableData

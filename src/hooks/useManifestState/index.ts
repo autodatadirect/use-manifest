@@ -1,20 +1,22 @@
 import { useReducer, useRef } from 'react'
 import reducer, { initialState, State } from './reducer'
 import * as types from './actionTypes'
+import { ManifestContext } from '../useManifest'
+import PropertyKeysOf = jest.PropertyKeysOf
 
 type Dispatch = (value: any) => void
 type ActionCreator = (...value: any) => any
 
-const bindDispatch = function (dispatch: Dispatch, actionCreator: ActionCreator) {
+const bindDispatch = (dispatch: Dispatch, actionCreator: ActionCreator) => {
   return (...args: any) => dispatch(actionCreator(...args))
 }
 
-export default (): State => {
+export default (): Omit<ManifestContext<any, any>, 'definition'> => {
   const [state, dispatch]: [State, Dispatch] = useReducer(reducer, initialState, undefined as any)
-  const dispatchersRef = useRef<Partial<State>>()
+  const dispatchersRef = useRef<Omit<ManifestContext<any, any>, PropertyKeysOf<State> | 'definition'>>()
 
   if (dispatchersRef.current == null) {
-    const current: any = {
+    dispatchersRef.current = {
       setPage: bindDispatch(dispatch, page => ({ type: types.SET_PAGE, page })),
       setPageSize: bindDispatch(dispatch, pageSize => ({ type: types.SET_PAGE_SIZE, pageSize })),
       setSorts: bindDispatch(dispatch, (id, direction) => ({ type: types.SET_SORTS, id, direction })),
@@ -27,11 +29,10 @@ export default (): State => {
       resetState: bindDispatch(dispatch, () => ({ type: types.RESET })),
       setError: bindDispatch(dispatch, error => ({ type: types.SET_ERROR, error }))
     }
-    dispatchersRef.current = current as State
   }
 
   return {
-    ...state,
-    ...dispatchersRef.current
+    ...dispatchersRef.current,
+    ...state
   }
 }

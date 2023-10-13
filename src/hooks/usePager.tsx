@@ -3,7 +3,7 @@ import * as pagerLogic from '../utils/pagerLogic'
 
 export default ({ numberOfPages }: { numberOfPages?: number }): {
   pages: number[]
-  count: number
+  count: number | null
   totalPages: number | null
   pageSize: number
   showLast: boolean

@@ -1,8 +1,8 @@
 import React from 'react'
-import useManifest from '../hooks/useManifest'
+import { useManifestRaw } from '../hooks/useManifest'
 
 export default function<Filter, Row>(): React.JSX.Element {
-  const state = useManifest<Filter, Row>()
+  const state = useManifestRaw<Filter, Row>()
   const displayState: any = { ...state }
   delete displayState.rows
   delete displayState.definition

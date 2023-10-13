@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { Definition, manifestContext } from '../components/Manifest'
+import { DefArray, Definition, manifestContext, RowType } from '../components/Manifest'
 import { ASCENDING, DESCENDING, NOT_SORTED } from '../constants/sortDirections'
 import { State } from './useManifestState/reducer'
 
@@ -9,7 +9,7 @@ export interface Sort {
 }
 
 export interface ManifestContext<Filter, Row> {
-  count: number
+  count: number | null
   setCount: (count: number) => void
   setLoadingCount: (loading: boolean) => void
   loadingCount: boolean
@@ -19,9 +19,10 @@ export interface ManifestContext<Filter, Row> {
   setLoadingRows: (loading: boolean) => void
   loadingRows: boolean
 
-  definition: Definition[]
+  definition: readonly Definition[]
 
   updateState: (state: Partial<State>) => void
+  resetState: () => void
   error: any
   setError: (error: any) => void
 
@@ -31,13 +32,18 @@ export interface ManifestContext<Filter, Row> {
   setSorts: (id: Definition['id'], direction: Sort['direction']) => void
   sorts: Sort[]
 
-  loading: boolean
-
   setPage: (page: number) => void
   page: number
   filter: Filter
+  setFilter: (filter: Filter) => void
 }
 
-export default function<Filter, Row>(): ManifestContext<Filter, Row> {
+function useManifest<Def extends DefArray, Filter> (): ManifestContext<Filter, RowType<Def>> {
+  return useManifestRaw<Filter, RowType<Def>>()
+}
+
+export function useManifestRaw<Filter, Def> (): ManifestContext<Filter, Def> {
   return useContext(manifestContext)
 }
+
+export default useManifest
