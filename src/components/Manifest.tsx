@@ -79,20 +79,18 @@ function useCountFetcher<Filter> ({ fetchCount }: { fetchCount?: CountFetcher<Fi
   if (fetchCount == null) {
     return async () => { }
   }
-  return useCallback(
-    async (filter: Filter) => {
-      const id = ++countCallId
-      setLoadingCount(true)
-      try {
-        const count = await fetchCount(filter)
-        if (id !== countCallId) return
-        setCount(count)
-      } catch (error) {
-        setError(error)
-      }
-      setLoadingCount(false)
+  return useCallback(async (filter: Filter) => {
+    const id = ++countCallId
+    setLoadingCount(true)
+    try {
+      const count = await fetchCount(filter)
+      if (id !== countCallId) return
+      setCount(count)
+    } catch (error) {
+      setError(error)
     }
-    , [setError, fetchCount, setLoadingCount, setCount])
+    setLoadingCount(false)
+  }, [setError, fetchCount, setLoadingCount, setCount])
 }
 
 function useRowFetcher<Filter, Def extends DefArray> ({ fetchRows }: { fetchRows: RowFetcher<Filter, Def> }): (filter: Filter, { page, pageSize, sorts }: RowFetcherProps) => Promise<void> {
@@ -156,11 +154,13 @@ function Effects<Filter, Def extends DefArray> ({ fetchRows, fetchCount, autoLoa
       return
     }
 
-    const changes = [pageChanged(), pageSizeChanged(), filterChanged(), sortsChanged()]
+    const filterChange = filterChanged()
+    const changes = [pageChanged(), pageSizeChanged(), filterChange, sortsChanged()]
+
     if (changes.filter(c => c).length > 0) {
       runFetchRows(filter, { page, pageSize, sorts }).catch(console.error)
     }
-    if (filterChanged() && count === null && (fetchCount != null)) {
+    if (filterChange && count === null && (fetchCount != null)) {
       runFetchCount(filter, { page, pageSize, sorts }).catch(console.error)
     }
   })
