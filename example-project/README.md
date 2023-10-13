@@ -19,6 +19,6 @@ You may find yourself using a pattern like
 cd ..; npm ci && npm run build && rm -rf node_modules && cd example-project; npm ci && npm run start
 ```
 
-...assuming you run this command from already within example-project.
+...note that this command assumes you're running from already within the example-project directory.
 
 I'm not going to tell you this is beautiful, but it should mostly work.
