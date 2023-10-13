@@ -18,7 +18,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "BROWSER=none react-scripts start",
+    "start": "cd ..; rm -r node_modules; cd -; react-scripts start",
     "build": "npm run lint && react-scripts build",
     "lint": "ts-standard --fix",
     "test": "react-scripts test",

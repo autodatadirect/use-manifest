@@ -9,16 +9,8 @@ All you should have to do to get started is `npm ci && npm run start`
 
 ## Troubleshooting!
 
-There can be some wonk with multiple react dependencies and whatnot.
-If the example seems to be mysteriously crashing or has bizarre type errors, try deleting
-use-manifest/node_modules/ and maybe redo `npm ci` here in example-project before trying
-`npm run start` again.
+There is currently some dependency wonk in place.
+`npm run start` will automatically clear use-manifest's `node_modules/` directory, but this requires
+doing `npm ci` in use-manifest before `npm run build` will work again.
 
-You may find yourself using a pattern like
-```
-cd ..; npm ci && npm run build && rm -rf node_modules && cd example-project; npm ci && npm run start
-```
-
-...note that this command assumes you're running from already within the example-project directory.
-
-I'm not going to tell you this is beautiful, but it should mostly work.
+If anyone can figure out a way to get around that I will be eternally grateful.
