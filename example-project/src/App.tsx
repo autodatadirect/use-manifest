@@ -1,5 +1,4 @@
 import React, { FC, ReactNode } from 'react'
-import './App.css'
 import { getColorType, ColorType, useOnce, sleep } from './util'
 import db from './db'
 import {
@@ -24,6 +23,7 @@ const ColorSquare: FC<{ color: string }> = ({ color }) =>
     title={color} style={{
       backgroundColor: color,
       minHeight: '20px',
+      margin: '0.4em',
       minWidth: '20px',
       border: '1px solid black',
       display: 'inline-block',
@@ -90,18 +90,22 @@ const FilterSelect: FC = () => {
   useOnce(() => colorFilter(ColorType.Any))
 
   return (
-    <select onChange={e => colorFilter(parseInt(e.target.value) as ColorType)}>
-      <option value={ColorType.Any}>All Colors</option>
-      <option value={ColorType.Reddish}>Reddish</option>
-      <option value={ColorType.Greenish}>Greenish</option>
-      <option value={ColorType.Bluish}>Bluish</option>
-      <option value={ColorType.Grayish}>Grayish</option>
-    </select>
+    <div style={{ backgroundColor: '#eee', textAlign: 'center' }}>
+      Filter by type:
+      <select onChange={e => colorFilter(parseInt(e.target.value) as ColorType)}
+              style={{ margin: '0.5em'}}>
+        <option value={ColorType.Any}>All Colors</option>
+        <option value={ColorType.Reddish}>Reddish</option>
+        <option value={ColorType.Greenish}>Greenish</option>
+        <option value={ColorType.Bluish}>Bluish</option>
+        <option value={ColorType.Grayish}>Grayish</option>
+      </select>
+    </div>
   )
 }
 
 const App: FC = () =>
-  <div className='App' style={{ width: '300px' }}>
+  <div className='App' style={{ width: '300px', padding: '40px' }}>
     <Manifest fetchRows={fetchRows} fetchCount={fetchCount} definition={definition} autoLoad>
       <FilterSelect />
       <DefaultChildren />
