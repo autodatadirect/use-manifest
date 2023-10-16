@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { DefArray, Definition, manifestContext, RowType } from '../components/Manifest'
+import { Definition, manifestContext } from '../components/Manifest'
 import { ASCENDING, DESCENDING, NOT_SORTED } from '../constants/sortDirections'
 import { State } from './useManifestState/reducer'
 
@@ -38,11 +38,7 @@ export interface ManifestContext<Filter, Row> {
   setFilter: (filter: Filter) => void
 }
 
-function useManifest<Def extends DefArray, Filter> (): ManifestContext<Filter, RowType<Def>> {
-  return useManifestRaw<Filter, RowType<Def>>()
-}
-
-export function useManifestRaw<Filter, Def> (): ManifestContext<Filter, Def> {
+function useManifest<Row, Filter> (): ManifestContext<Filter, Row> {
   return useContext(manifestContext)
 }
 

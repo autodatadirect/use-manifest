@@ -8,22 +8,11 @@ import SimpleHeader from './DefaultHeader'
 
 export interface Definition {
   id: string
-  // type?: keyof TypeMap
   label?: React.ReactNode
   sortable?: boolean
   cellComponent?: typeof Cell
   headerComponent?: typeof SimpleHeader
 }
-
-// export interface TypeMap {
-//   string: string,
-//   number: number,
-//   boolean: boolean,
-//   symbol: Symbol,
-//   undefined: undefined,
-//   object: object,
-//   function: Function
-// }
 
 export type DefArray = readonly Definition[]
 
@@ -35,39 +24,7 @@ export interface RowFetcherProps {
   sorts: Sort[]
 }
 
-/**
- * Builds an object type from the `id` values in a Definition array.
- * For example, say you have a definition like so:
- * const definition = [
- *   { id: 'fullName', ... },
- *   { id: 'birthday', ... },
- * ] as const
- *
- * RowType<typeof definition> will thus produce the type
- * {
- *   fullName: string | number | object | any[] | undefined,
- *   birthday: string | number | object | any[] | undefined
- * }
- */
-export type RowType<Def extends DefArray> =
-  Pick<Record<string, string | number | object | any[] | undefined>, Def[number]['id']>
-
-// export type TypeField<Def extends DefArray> = Def[number]['type']
-
-// export type DefType<Def extends DefArray> =
-//   TypeField<Def> extends keyof TypeMap ? TypeMap[TypeField<Def>] : unknown
-
-// export type RowType<Def extends DefArray> =
-//   Pick<
-//     Record<string, DefType<Def>>,
-//     Def[number]['id']>
-
-// export type RowType<Def extends DefArray> =
-//   Pick<
-//     Record<string, Def[number]['type'] extends keyof TypeMap ? TypeMap[Def[number]['type']] : unknown>,
-//     Def[number]['id']>
-
-export type RowFetcher<Filter, Def extends DefArray> = (filter: Filter, props?: RowFetcherProps) => Promise<Array<RowType<Def>>>
+export type RowFetcher<Filter, Row> = (filter: Filter, props?: RowFetcherProps) => Promise<Row[]>
 
 export const manifestContext: React.Context<ManifestContext<any, any>> = createContext(null as any)
 
@@ -93,14 +50,14 @@ function useCountFetcher<Filter> ({ fetchCount }: { fetchCount?: CountFetcher<Fi
   }, [setError, fetchCount, setLoadingCount, setCount])
 }
 
-function useRowFetcher<Filter, Def extends DefArray> ({ fetchRows }: { fetchRows: RowFetcher<Filter, Def> }): (filter: Filter, { page, pageSize, sorts }: RowFetcherProps) => Promise<void> {
-  const { setLoadingRows, setRows, setError } = useManifest<Def, unknown>()
+function useRowFetcher<Filter, Row> ({ fetchRows }: { fetchRows: RowFetcher<Filter, Row> }): (filter: Filter, { page, pageSize, sorts }: RowFetcherProps) => Promise<void> {
+  const { setLoadingRows, setRows, setError } = useManifest<Row, unknown>()
   return useCallback(
     async (filter: Filter, { page, pageSize, sorts }: RowFetcherProps) => {
       const id = ++rowCallId
       setLoadingRows(true)
       try {
-        const rows: Array<RowType<Def>> = await fetchRows(filter, { page, pageSize, sorts })
+        const rows: Row[] = await fetchRows(filter, { page, pageSize, sorts })
 
         if (id !== rowCallId) return
         setRows(rows)
@@ -131,18 +88,18 @@ export const useIsFirstLoad = (): boolean => {
   return false
 }
 
-export interface EffectsProps<Filter, Def extends DefArray> {
-  fetchRows: RowFetcher<Filter, Def>
+export interface EffectsProps<Filter, Row> {
+  fetchRows: RowFetcher<Filter, Row>
   fetchCount?: CountFetcher<Filter>
   autoLoad?: boolean
 }
 
-function Effects<Filter, Def extends DefArray> ({ fetchRows, fetchCount, autoLoad = false }: EffectsProps<Filter, Def>): null {
-  const { page, pageSize, sorts, filter, count } = useManifest<Def, Filter>()
+function Effects<Filter, Row> ({ fetchRows, fetchCount, autoLoad = false }: EffectsProps<Filter, Row>): null {
+  const { page, pageSize, sorts, filter, count } = useManifest<Row, Filter>()
   const isFirstLoad = useIsFirstLoad()
 
   const runFetchCount = useCountFetcher<Filter>({ fetchCount })
-  const runFetchRows = useRowFetcher<Filter, Def>({ fetchRows })
+  const runFetchRows = useRowFetcher<Filter, Row>({ fetchRows })
 
   const pageChanged = useDetectChange(page)
   const pageSizeChanged = useDetectChange(pageSize)
@@ -174,17 +131,51 @@ export const DefaultChildren: FC = () =>
     <DefaultControls />
   </>
 
-export interface ManifestProps<Filter, Def extends DefArray> {
+export interface ManifestProps<Filter, Row, Def extends DefArray> {
   children?: React.ReactNode | null
-  // TODO: May want to union with [key: string]: unknown for non-display columns
-  fetchRows: RowFetcher<Filter, Def>
   fetchCount: CountFetcher<Filter>
   definition: Def
   autoLoad?: boolean
+  // TODO: May want to union Row with [key: string]: unknown for non-display columns
+  fetchRows: RowFetcher<Filter, Row>
 }
 
-function Manifest<Filter, Def extends DefArray> ({ children, fetchRows, fetchCount, definition, autoLoad }: ManifestProps<Filter, Def>): React.JSX.Element {
+export type IdNames<Def extends DefArray> = string extends Def[number]['id'] ? never : Def[number]['id']
+
+/**
+ * Builds an object type from the `id` values in a Definition array.
+ * For example, say you have a definition like so:
+ * @example
+ * const definition = [
+ *   { id: 'fullName', ... },
+ *   { id: 'birthday', ... },
+ * ] as const
+ *
+ * // RowType<typeof definition> will thus produce the type
+ * {
+ *   fullName: unknown,
+ *   birthday: unknown
+ * }
+ *
+ * // And using Manifest with a mismatched Row type will be a compilation error:
+ * interface Row {
+ *   fullName: string
+ * }
+ *
+ * const rowFetcher = async (): Promise<Row[]> => []
+ * <Manifest ... fetchRows={rowFetcher} definition={definition} />
+ *
+ * // Will cause the error: Property 'birthday' is missing in type 'Row' but required in...
+ *
+ * // If for some reason the provided definition can't be const,
+ * // RowType<typeof definition> will just produce the type {}
+ * // In this case, the Manifest will be unable to check its Row type against its definition.
+ */
+export type RowType<Def extends DefArray> = Pick<Record<string, unknown>, IdNames<Def>>
+
+function Manifest<Filter, Row extends RowType<Def>, Def extends DefArray> (props: ManifestProps<Filter, Row, Def>): React.JSX.Element {
   const state = useManifestState()
+  const { children, fetchRows, fetchCount, definition, autoLoad } = props
 
   const contextValue = {
     ...state,

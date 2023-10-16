@@ -6,31 +6,33 @@ import {
   DefaultChildren,
   Manifest,
   RowFetcher as BareRowFetcher,
-  RowType as BareRowType,
   useManifest as useBareManifest
 } from 'use-manifest'
 
-export type RowType = BareRowType<typeof definition>
+export interface RowType {
+  name: string
+  favoriteColor: string
+}
 
 export type Filter = (row: RowType) => boolean
 
-export type RowFetcher = BareRowFetcher<Filter, typeof definition>
+export type RowFetcher = BareRowFetcher<Filter, RowType>
 
-export const useManifest = useBareManifest<typeof definition, Filter>
+export const useManifest = useBareManifest<RowType, Filter>
 
 const ColorSquare: FC<{ color: string }> = ({ color }) =>
   <div style={{ textAlign: 'center' }}>
-  <span
-    title={color} style={{
-      backgroundColor: color,
-      minHeight: '20px',
-      margin: '0.4em',
-      minWidth: '20px',
-      border: '1px solid black',
-      display: 'inline-block',
-      marginRight: '3px'
-    }}
-  />
+    <span
+      title={color} style={{
+        backgroundColor: color,
+        minHeight: '20px',
+        margin: '0.4em',
+        minWidth: '20px',
+        border: '1px solid black',
+        display: 'inline-block',
+        marginRight: '3px'
+      }}
+    />
   </div>
 
 const ColorCell = ({ rowIndex }: { rowIndex: number }): ReactNode => {
@@ -39,7 +41,7 @@ const ColorCell = ({ rowIndex }: { rowIndex: number }): ReactNode => {
 }
 
 // Note that the definition array needs this `as const`, and should not be explicitly typed!
-// Otherwise the type system loses all the juicy bits about the actual values like `id`
+// Otherwise, the type system loses all the juicy bits about the actual values of `id`
 const definition = [
   {
     id: 'name',
@@ -58,7 +60,7 @@ const definition = [
   }
   // Uncommenting this will add a new field to the type expected from a RowFetcher.
   // Since fetchRows() isn't supplying this new field, there will be a compilation error!
-  // { id: 'greeting' }
+  // , { id: 'greeting' }
 ] as const
 
 const fetchRows: RowFetcher = async (filter, props) => {
@@ -94,8 +96,10 @@ const FilterSelect: FC = () => {
   return (
     <div style={{ backgroundColor: '#ddd', textAlign: 'center', marginBottom: '1em' }}>
       Filter by type:
-      <select onChange={e => colorFilter(parseInt(e.target.value) as ColorType)}
-              style={{ margin: '0.5em'}}>
+      <select
+        onChange={e => colorFilter(parseInt(e.target.value) as ColorType)}
+        style={{ margin: '0.5em' }}
+      >
         <option value={ColorType.Any}>All Colors</option>
         <option value={ColorType.Reddish}>Reddish</option>
         <option value={ColorType.Greenish}>Greenish</option>
@@ -106,7 +110,7 @@ const FilterSelect: FC = () => {
   )
 }
 
-// TODO: Don't use DefaultChildren here - actual dependent projects should not.
+// TODO: Don't use DefaultChildren here? Actual dependent projects probably should not.
 const App: FC = () =>
   <div className='App' style={{ width: '300px', padding: '20px', backgroundColor: '#f5f5f5', margin: '40px' }}>
     <Manifest fetchRows={fetchRows} fetchCount={fetchCount} definition={definition} autoLoad>

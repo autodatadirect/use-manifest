@@ -30,6 +30,16 @@
       "react-app/jest"
     ]
   },
+  "ts-standard": {
+    "ignore": [
+      "node_modules",
+      "build",
+      "dist",
+      "example-project",
+      "src/**/*.test.ts",
+      "src/**/*.test.js"
+    ]
+  },
   "browserslist": {
     "production": [
       ">0.2%",

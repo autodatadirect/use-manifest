@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import HeaderCell from './HeaderCell'
 import Cell from './DataCell'
 import integerSequence from '../../utils/integerSequence'
-import { Sort, useManifestRaw } from '../../hooks/useManifest'
+import useManifest, { Sort } from '../../hooks/useManifest'
 import useCell from '../../hooks/useCell'
 import { Definition } from '../Manifest'
 
@@ -69,12 +69,12 @@ export interface TableRowPropsHandlerProps<Row> {
 export interface TableRowProps<Row> {
   rowIndex: number
   columnIndexes: number[]
-  trPropsHandler: (props: TableRowPropsHandlerProps<Row>) => object | null
+  trPropsHandler: (props: TableRowPropsHandlerProps<Row>) => React.ComponentProps<'tr'> | null
   tdPropsHandler: TableDataProps<Row>['tdPropsHandler']
 }
 
 function TableRow<Row> ({ rowIndex, columnIndexes, trPropsHandler, tdPropsHandler }: TableRowProps<Row>): React.JSX.Element {
-  const state = useManifestRaw<unknown, Row>()
+  const state = useManifest<Row, unknown>()
   const row = state.rows[rowIndex]
   const props = trPropsHandler({ rowIndex, row }) ?? EMPTY_PROPS
 
@@ -101,7 +101,7 @@ export interface TableDataPropsHandlerProps<Row> {
 export interface TableDataProps<Row> {
   rowIndex: number
   columnIndex: number
-  tdPropsHandler: (props: TableDataPropsHandlerProps<Row>) => object | null
+  tdPropsHandler: (props: TableDataPropsHandlerProps<Row>) => React.ComponentProps<'td'> | null
 }
 
 function TableData<Row> ({ rowIndex, columnIndex, tdPropsHandler }: TableDataProps<Row>): React.JSX.Element {
