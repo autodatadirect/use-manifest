@@ -1,13 +1,14 @@
 {
   "name": "use-manifest",
-  "version": "1.1.15",
+  "version": "1.2.0",
   "description": "A paginated table implementation using React Hooks",
   "main": "./dist/index.js",
   "repository": "https://github.com/autodatadirect/use-manifest",
   "scripts": {
-    "build": "babel ./src -d ./dist; cp ./src/index.css ./dist/index.css",
+    "build": "tsc && cp ./src/index.css ./dist/index.css",
     "prepublish": "npm run build",
-    "lint": "standard \"./src/**/*.js\" | snazzy",
+    "lint": "ts-standard | snazzy",
+    "lint-fix": "ts-standard --fix | snazzy",
     "test": "jest ./src/* --watch",
     "dev": "babel ./src -w -d ./dist"
   },
@@ -22,13 +23,18 @@
   "devDependencies": {
     "@babel/cli": "^7.10.1",
     "@babel/core": "^7.10.2",
-    "@babel/plugin-proposal-object-rest-spread": "^7.10.1",
-    "@babel/preset-env": "^7.10.2",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
+    "@babel/preset-env": "^7.22.20",
     "@babel/preset-react": "^7.10.1",
+    "@babel/preset-typescript": "^7.23.0",
     "@babel/runtime": "^7.10.2",
     "jest": "^24.9.0",
     "snazzy": "^8.0.0",
-    "standard": "^14.3.4"
+    "source-map-loader": "^4.0.1",
+    "ts-loader": "^9.4.4",
+    "ts-standard": "^12.0.2",
+    "typescript": "^5.2.2"
   },
   "peerDependencies": {
     "react": "^16.12.0 || ^17.0.2 || ^18.2.0"
@@ -36,9 +42,19 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "standard": {
-    "env": [
-      "jest"
+  "ts-standard": {
+    "ignore": [
+      "node_modules",
+      "build",
+      "dist",
+      "example-project",
+      "src/**/*.test.ts",
+      "src/**/*.test.js"
     ]
+  },
+  "dependencies": {
+    "@types/jest": "^29.5.5",
+    "@types/react": "^18.2.24",
+    "@types/react-dom": "^18.2.8"
   }
 }
