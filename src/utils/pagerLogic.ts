@@ -1,6 +1,7 @@
 export const determineTotalPages = (pageSize: number, count: number | null): number | null => {
   if (count === null) return null
-  return Math.floor(count / pageSize) + (count % ((pageSize === 0) ? 1 : 0))
+  const modulo = count % pageSize
+  return Math.floor(count / pageSize) + (modulo !== 0 && !isNaN(modulo) ? 1 : 0)
 }
 
 const determinePagesWithoutCount = (numberOfPages: number, currentPage: number, showNext: boolean): number[] => {

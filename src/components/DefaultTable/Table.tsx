@@ -93,7 +93,7 @@ export interface TableDataPropsHandlerProps<Row> {
   row: Row
   id: string
   label: React.ReactNode
-  value: object
+  value: any
   def: Definition
   sorts: Sort[]
 }
@@ -106,7 +106,7 @@ export interface TableDataProps<Row> {
 
 function TableData<Row> ({ rowIndex, columnIndex, tdPropsHandler }: TableDataProps<Row>): React.JSX.Element {
   const { row, id, label, value, def, sorts } = useCell<Row>({ rowIndex, columnIndex })
-  const props = (tdPropsHandler({ rowIndex, columnIndex, row, id, label, value, def, sorts }) != null) || EMPTY_PROPS
+  const props = tdPropsHandler({ rowIndex, columnIndex, row, id, label, value, def, sorts }) ?? EMPTY_PROPS
   return (
     <td {...props} key={`${columnIndex}.${rowIndex}`}>
       <Cell columnIndex={columnIndex} rowIndex={rowIndex} />

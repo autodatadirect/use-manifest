@@ -118,7 +118,7 @@ const setFilter = (state: State, action: any): State => ({
 const updateState = (state: State, action: any): State => {
   const updatedState = { ...state }
 
-  if (action.filter == null) {
+  if (action.filter != null) {
     if (action.filter !== updatedState.filter) {
       updatedState.count = null
       updatedState.filter = action.filter
